@@ -111,6 +111,25 @@ export function ScreenPreview({ name }: { name: string }) {
         receipt_footer: 'Thank you! Come again.', token_reset_time: '04:00', shift_end_time: null, late_kot_minutes: 15,
         discount_limit_amount: '100.00', kitchen_print_enabled: false, ...audit,
       }),
+      getSalesReport: (from: string, to: string) => ok({
+        from, to, total_sales: '18450.00', bill_count: 42,
+        by_method: [{ method: 'CASH', amount: '8250.00' }, { method: 'UPI', amount: '9000.00' }, { method: 'CARD', amount: '1200.00' }],
+        by_category: [{ category: 'Breads', amount: '4440.00' }, { category: 'Dal and curry', amount: '9800.00' }],
+        top_items: [{ item_name: 'Tandoori Roti', quantity: 148 }, { item_name: 'Dal Makhani', quantity: 32 }, { item_name: 'Lassi', quantity: 28 }, { item_name: 'Butter Chicken', quantity: 24 }],
+        cancelled_items: [{ item_name: 'Lassi', quantity: 1 }],
+        exceptions: [{ exception_type: 'DISCOUNT', reason_code: 'OTHER', amount: '50.00', bill_no: 'B-20261105-007' }],
+      }),
+      searchOrders: () => ok([{ id: 'o1', bill_no: 'B-20261105-001', table_label_snapshot: '3', business_date: '2026-11-05', status: 'PAID', grand_total: '620.00', ...audit }]),
+      getDayCloseSummary: () => ok({
+        business_date: '2026-11-05', cash_total: '8250.00', snapshots: ['dayclose-2026-11-04.xlsx'],
+        unsettled_orders: [
+          { id: 'o3', table_label_snapshot: '3', status: 'BILLED', balance_due: '620.00', ...audit },
+          { id: 'o9', token: 'T-001', status: 'OPEN', balance_due: '300.00', ...audit },
+        ],
+      }),
+      closeDay: () => ok({ snapshot: 'dayclose-2026-11-05.xlsx' }), closeWithException: echo,
+      downloadBackup: () => ok(new Blob(['x'])), confirmRestore: () => ok({}),
+      previewRestore: () => ok({ restore_id: 'r1', file_date: '2026-10-06 22:15', order_count: 840, payment_count: 910 }),
     } as unknown as Parameters<typeof AdminAreaScreen>[0]['api'];
     const section = name.slice('admin-'.length);
     const initial = (ADMIN_SECTIONS as readonly string[]).includes(section) ? section as AdminSection : 'menu';

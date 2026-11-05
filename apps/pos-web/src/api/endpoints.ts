@@ -87,14 +87,16 @@ export function endpoints(api: ApiClient) {
     getSalesReport: (from: string, to: string) => r<Record<string, unknown>>('/admin/reports/sales', { query: { from, to } }),
     searchOrders: (query: { date?: string; bill_no?: string; table?: string; token?: string }) =>
       r<Order[]>('/admin/orders', { query }),
+    downloadBackup: (snapshot?: string) =>
+      r<Blob>('/admin/backups/download', { query: { snapshot }, responseType: 'blob', timeoutMs: 60000, retries: 0 }),
     previewRestore: (key: string, body: unknown) =>
-      r<Record<string, unknown>>('/admin/restores', { method: 'POST', idempotencyKey: key, body }),
+      r<Record<string, unknown>>('/admin/restores', { method: 'POST', idempotencyKey: key, body, timeoutMs: 120000 }),
     confirmRestore: (id: string, body: { pin: string; pin_confirm: string }) =>
-      r<Record<string, unknown>>(`/admin/restores/${encodeURIComponent(id)}/confirm`, { method: 'POST', body, retries: 0 }),
+      r<Record<string, unknown>>(`/admin/restores/${encodeURIComponent(id)}/confirm`, { method: 'POST', body, retries: 0, timeoutMs: 120000 }),
     getSettings: () => r<Setting>('/settings'),
     updateSettings: (rowVersion: number, body: Partial<Setting>, x?: Extra) =>
       r<Setting>('/admin/settings', { method: 'PUT', ifMatch: rowVersion, body, ...x }),
     getDayCloseSummary: () => r<Record<string, unknown>>('/admin/day-close'),
-    closeDay: (key: string) => r<Record<string, unknown>>('/admin/day-close', { method: 'POST', idempotencyKey: key }),
+    closeDay: (key: string) => r<Record<string, unknown>>('/admin/day-close', { method: 'POST', idempotencyKey: key, timeoutMs: 60000 }),
   };
 }

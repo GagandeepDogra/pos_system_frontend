@@ -69,6 +69,15 @@ What is in place today:
 - in the admin area, staff: add a person with a role and a PIN of 4 or more digits, change the role, reset the
   PIN, turn the person off (they are logged out everywhere) and back on, and unlock someone locked for 5 minutes
   after 5 wrong PINs; the login screen says when a person is locked;
+- in the admin area, reports: today, yesterday or a date range (past months included), with total collected,
+  the Cash/UPI/Card split, sales by category, top selling items, cancelled items, and discounts and exceptions;
+  "Download report" saves a CSV;
+- in the admin area, history: find past orders by date, bill number, table or token;
+- in the admin area, day close: the cash total to count in the drawer, every open or printed bill in red (collect
+  it or close it with a reason), then "Close the day", which saves a backup copy;
+- in the admin area, backup: download the current data file or a saved copy, and restore from a backup file:
+  the file is checked first, its date and order/payment counts are shown, the owner PIN is entered twice, and
+  then every device reloads on the restored data;
 - in the admin area, settings: dhaba name, address, phone, GST number and rate (both optional), receipt footer
   (printed on the next receipt), token reset time and late-order minutes for the kitchen;
 - price changes with the old and new price side by side and a required reason (market rate, new season,

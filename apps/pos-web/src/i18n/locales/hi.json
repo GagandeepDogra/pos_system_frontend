@@ -58,7 +58,10 @@
     "shortCode": "कोड",
     "shortCodeHint": "छोटा कोड (2 से 5 अक्षर)",
     "foodType": "शाकाहारी या मांसाहारी",
-    "food": { "VEG": "शाकाहारी", "NON_VEG": "मांसाहारी" },
+    "food": {
+      "VEG": "शाकाहारी",
+      "NON_VEG": "मांसाहारी"
+    },
     "photoUrl": "फ़ोटो लिंक (ज़रूरी नहीं)",
     "station": "रसोई स्टेशन (ज़रूरी नहीं)",
     "availableToday": "आज मिलेगा",
@@ -106,7 +109,12 @@
     "old": "पुराना ₹",
     "new": "नया ₹",
     "reason": "कारण",
-    "reasons": { "MARKET_RATE": "बाज़ार भाव", "NEW_SEASON": "नया मौसम", "CORRECTION": "सुधार", "OTHER": "दूसरा" },
+    "reasons": {
+      "MARKET_RATE": "बाज़ार भाव",
+      "NEW_SEASON": "नया मौसम",
+      "CORRECTION": "सुधार",
+      "OTHER": "दूसरा"
+    },
     "confirm": "दाम पक्का करें",
     "newLinesOnly": "नया दाम सिर्फ़ नए ऑर्डर पर लगेगा। भेजे गए खाने का दाम पुराना रहेगा।",
     "saved": "दाम बदल गया",
@@ -121,7 +129,18 @@
     "title": "एडमिन",
     "manage": "रेस्टोरेंट संभालें",
     "backToPos": "← POS पर वापस",
-    "sections": { "menu": "मेन्यू", "prices": "दाम", "tables": "टेबल", "staff": "स्टाफ़", "settings": "सेटिंग", "device": "यह डिवाइस" }
+    "sections": {
+      "menu": "मेन्यू",
+      "prices": "दाम",
+      "tables": "टेबल",
+      "staff": "स्टाफ़",
+      "settings": "सेटिंग",
+      "device": "यह डिवाइस",
+      "reports": "रिपोर्ट",
+      "history": "पुराने ऑर्डर",
+      "dayClose": "दिन बंद",
+      "backup": "बैकअप"
+    }
   },
   "adminSetup": {
     "active": "चालू",
@@ -589,6 +608,123 @@
       "nameTooLong": "नाम बहुत लंबा है। 40 अक्षर या कम लिखें।",
       "phoneDigits": "फ़ोन 4 से 10 अंक का हो।",
       "tokenTaken": "यह टोकन आज पहले से है। फिर से टोकन लें दबाएं।"
+    }
+  },
+  "reports": {
+    "todayTitle": "आज का हाल",
+    "yesterdayTitle": "कल का हाल",
+    "rangeTitle": "तारीखों की बिक्री",
+    "rangeOf": "{from} से {to}",
+    "archiveIncluded": "पिछले महीने शामिल",
+    "download": "रिपोर्ट डाउनलोड",
+    "downloaded": "रिपोर्ट सेव हुई।",
+    "period": "कौन से दिन",
+    "periods": {
+      "today": "आज",
+      "yesterday": "कल",
+      "range": "तारीखें चुनें"
+    },
+    "from": "से",
+    "to": "तक",
+    "show": "दिखाएँ",
+    "rangeOrder": "\"से\" की तारीख \"तक\" से पहले हो।",
+    "loading": "लोड हो रहा है...",
+    "totalSales": "कुल बिक्री",
+    "paidBills": "{count} बिल भुगतान",
+    "discounts": "छूट",
+    "exceptionCount": "{count} छूट और अपवाद",
+    "cancelled": "रद्द आइटम",
+    "cancelledSub": "रिकॉर्ड में, पैसा नहीं लिया",
+    "paymentSplit": "भुगतान का बँटवारा",
+    "totalCollected": "कुल वसूली",
+    "topItems": "सबसे ज़्यादा बिके",
+    "sold": "{count} बिके",
+    "rankedBy": "मात्रा के क्रम में",
+    "byCategory": "श्रेणी अनुसार बिक्री",
+    "qty": "{count} रद्द",
+    "exceptions": "छूट और अपवाद",
+    "none": "इन दिनों में कुछ नहीं।",
+    "methods": {
+      "CASH": "नकद",
+      "UPI": "UPI",
+      "CARD": "कार्ड"
+    },
+    "exceptionTypes": {
+      "DISCOUNT": "छूट",
+      "BILL_REOPEN": "बिल फिर खोला",
+      "CANCEL_AFTER_START": "बनने के बाद रद्द",
+      "CLOSE_WITH_BALANCE": "बकाया के साथ बंद",
+      "PAYMENT_VOID": "भुगतान रद्द"
+    }
+  },
+  "history": {
+    "title": "पुराने ऑर्डर खोजें",
+    "date": "तारीख",
+    "billNo": "बिल नंबर",
+    "table": "टेबल",
+    "token": "टोकन",
+    "search": "खोजें",
+    "noResults": "कोई ऑर्डर नहीं मिला।",
+    "order": "ऑर्डर",
+    "status": "स्थिति",
+    "total": "कुल",
+    "tableN": "टेबल {n}",
+    "statuses": {
+      "OPEN": "खुला",
+      "BILLED": "बिल छपा",
+      "PAID": "भुगतान हुआ",
+      "CLOSED_EXCEPTION": "बकाया के साथ बंद",
+      "CANCELLED": "रद्द"
+    }
+  },
+  "dayClose": {
+    "title": "दिन बंद करें",
+    "cashTotal": "गल्ले में नकद",
+    "cashHelp": "गल्ले का नकद गिनें। रद्द भुगतान नहीं गिने जाते।",
+    "toSettle": "बाकी बिल",
+    "openCount": "{count} खुले बिल",
+    "due": "{amount} बाकी",
+    "collect": "पैसे लें",
+    "closeException": "बकाया के साथ बंद",
+    "reason": "कारण",
+    "orderClosed": "बिल बंद हुआ।",
+    "settleFirst": "दिन बंद करने से पहले सारे पैसे लें।",
+    "allSettled": "सारे बिल पूरे हैं।",
+    "closeDay": "दिन बंद करें",
+    "done": "दिन बंद हुआ। बैकअप कॉपी सेव हुई।",
+    "stillOpen": "कुछ बिल अभी खुले हैं।",
+    "tryAgain": "जाँचें और फिर कोशिश करें।",
+    "snapshotOf": "दिन बंद {date}"
+  },
+  "backup": {
+    "title": "बैकअप",
+    "live": "अभी की डेटा फ़ाइल",
+    "download": "बैकअप डाउनलोड",
+    "downloadOne": "डाउनलोड",
+    "downloaded": "बैकअप सेव हुआ।",
+    "auto": "हर 15 मिनट और दिन बंद पर अपने आप कॉपी। वापस लाने के लिए मालिक का PIN दो बार।",
+    "snapshots": "सेव कॉपियाँ",
+    "noSnapshots": "इस डिवाइस पर अभी कोई कॉपी नहीं।",
+    "restoreTitle": "बैकअप से वापस लाएँ",
+    "restoreHelp": "बैकअप फ़ाइल चुनें। कुछ बदलने से पहले जाँच होगी।",
+    "file": "बैकअप फ़ाइल",
+    "check": "फ़ाइल जाँचें",
+    "rejected": "यह फ़ाइल सही बैकअप नहीं है।",
+    "pickOther": "दूसरी फ़ाइल चुनें।",
+    "fileDate": "फ़ाइल की तारीख",
+    "orders": "ऑर्डर",
+    "payments": "भुगतान",
+    "warning": "सभी डिवाइस इस डेटा पर आ जाएँगे। पहले अभी के डेटा की कॉपी सेव होगी।",
+    "cancel": "रद्द करें",
+    "restored": "वापस आ गया। सभी डिवाइस फिर से खुल रहे हैं।",
+    "reloading": "वापस आ गया। फिर से खुल रहा है...",
+    "expired": "जाँच का समय खत्म हुआ।",
+    "pin": {
+      "first": "मालिक का PIN",
+      "again": "मालिक का PIN फिर से",
+      "short": "कम से कम 4 अंक डालें।",
+      "mismatch": "दोनों PIN मेल नहीं खाते। फिर से शुरू करें।",
+      "refused": "PIN नहीं माना गया। फिर से शुरू करें।"
     }
   }
 }

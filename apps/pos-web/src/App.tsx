@@ -79,6 +79,8 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
       setChannel(null);
     };
   }, [token, realtime]);
+  // A confirmed restore swaps the data under every device: reload at once (REQ-079).
+  useEffect(() => channel?.on('app.reload', () => window.location.reload()), [channel]);
   const [deviceLang, setDeviceLang] = useState<Language>(() => getUserLanguage(DEVICE_USER));
   const approvals = useMemo(() => createApprovalHolder(), []);
 
@@ -169,6 +171,7 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
         onDeviceLock={(r) => { setDeviceLock(r); setLock(r); }}
         onHome={goHome}
         onSwitchUser={logout}
+        onCollect={(orderId) => { setBillOrderId(orderId); setPayReturn('bills'); open('payment'); }}
       />
     );
   } else if (screen === 'dashboard' && canOpen(lock, 'dashboard')) {

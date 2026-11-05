@@ -347,6 +347,8 @@ export const REALTIME_EVENTS = [
   'payment.recorded',
   'menu.availability_changed',
   'dashboard.updated',
+  /** After a restore: every device reloads (REQ-079). */
+  'app.reload',
 ] as const;
 export type RealtimeEvent = (typeof REALTIME_EVENTS)[number];
 

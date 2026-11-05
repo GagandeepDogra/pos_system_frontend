@@ -68,7 +68,7 @@
   (styles/admin.css): a table on desktop, one card per row < 768 px via `td[data-label]`. `#/design/admin-menu`
   previews it.
 - `screens/AdminSetupScreen.tsx` + `admin/setupAdminModel.ts` — admin sections 'tables', 'staff', 'settings'
-  (`ADMIN_SECTIONS` is now menu, prices, tables, staff, settings, device; WI-030 adds reports/history/backup).
+  (`ADMIN_SECTIONS` is reports, menu, prices, tables, staff, history, dayClose, backup, settings, device; default section 'menu').
   `AdminSetupApi` (listTables, create/updateTable, listLoginStaff, createUser, updateUser, resetUserPin,
   getSettings, updateSettings); `AdminAreaScreen`'s `api` is `AdminMenuApi & AdminSetupApi` (+ optional
   `initialSection`). Lists come from GET /tables and GET /auth/staff (active only) merged with rows changed on this
@@ -80,6 +80,18 @@
   keeps discount_limit/kitchen_print/shift_end from the current row; 409 reloads `current`. Reuses `EditSheet`,
   `TextField`, `useFailText` exported from AdminMenuScreen. Login shows `login.locked` on 423.
   Previews: `#/design/admin-tables`, `#/design/admin-staff`, `#/design/admin-settings`.
+- `screens/AdminReportsScreen.tsx` + `admin/reportsAdminModel.ts` — admin sections 'reports', 'history', 'dayClose',
+  'backup' (`AdminReportsApi`). Report/day-close/restore response bodies are untyped in the contract, so
+  `normaliseReport`/`normaliseDayClose`/`normaliseRestorePreview` read them tolerantly; totals always come from the
+  server (never summed here except the by-method fallback). Default report range = `businessDate(now,
+  token_reset_time)`. History sends only filled fields; an empty list shows 'No orders found' (not an error).
+  Day close lists OPEN/BILLED in red with Collect (App `onCollect` -> 'payment') / Close with balance
+  (`closeExceptionBody`); Close the day is disabled while any remain. Snapshots are kept in AdminAreaScreen state
+  (from GET day-close `snapshots` + each POST reply; the contract has no list endpoint). Restore: file ->
+  `previewRestore(key, FormData)` -> preview -> PinPad twice (`restorePinsError`, mismatch never reaches the
+  server) -> `confirmRestore` -> reload. App reloads on the realtime `app.reload` event (added to REALTIME_EVENTS).
+  The API client sends FormData/Blob bodies as is and supports `responseType: 'blob'` (`downloadBackup`);
+  `saveBlob` saves a download. Previews: `#/design/admin-reports`, `admin-history`, `admin-dayClose`, `admin-backup`.
 - `session/approval.ts` — `createApprovalHolder`: single-use Admin approval token, dropped after 2 min.
 - `components/PinPad.tsx` (4-digit large keypad, `shakeKey` shakes once), `components/AdminPinSheet.tsx`
   (Admin PIN override → `createApproval`; use it for every Admin-only action on a cashier phone and pass the token

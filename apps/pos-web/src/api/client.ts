@@ -30,6 +30,13 @@ export interface RequestOptions {
   retries?: number;
   onPhase?: (phase: RequestPhase) => void;
   onConflict?: (current: unknown) => void;
+  /** 'blob' returns the body as a Blob on success (backup download). */
+  responseType?: 'json' | 'blob';
+}
+
+/** A FormData/Blob body is sent as is (the browser sets the multipart Content-Type). */
+function isRawBody(body: unknown): body is FormData | Blob {
+  return (typeof FormData !== 'undefined' && body instanceof FormData) || (typeof Blob !== 'undefined' && body instanceof Blob);
 }
 
 export type ApiResult<T> =
@@ -109,7 +116,8 @@ export function createApiClient(config: ApiClientConfig = {}) {
     const target = baseUrl.startsWith('http') ? url.toString() : url.pathname + url.search;
 
     const headers: Record<string, string> = { Accept: 'application/json' };
-    if (opts.body !== undefined) headers['Content-Type'] = 'application/json';
+    const raw = isRawBody(opts.body);
+    if (opts.body !== undefined && !raw) headers['Content-Type'] = 'application/json';
     if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
     if (opts.ifMatch !== undefined) headers['If-Match'] = String(opts.ifMatch);
     if (opts.approvalToken) headers['X-Approval-Token'] = opts.approvalToken;
@@ -132,7 +140,7 @@ export function createApiClient(config: ApiClientConfig = {}) {
         res = await fetchImpl(target, {
           method,
           headers,
-          body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
+          body: opts.body === undefined ? undefined : raw ? (opts.body as FormData | Blob) : JSON.stringify(opts.body),
           signal: controller.signal,
         });
       } catch (e) {
@@ -144,6 +152,10 @@ export function createApiClient(config: ApiClientConfig = {}) {
         clearTimeout(timer);
       }
 
+      if (res.ok && opts.responseType === 'blob') {
+        opts.onPhase?.('saved');
+        return { ok: true, status: res.status, data: (await res.blob()) as T };
+      }
       const text = await res.text();
       let json: unknown = undefined;
       try {

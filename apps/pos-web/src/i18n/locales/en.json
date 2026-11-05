@@ -39,7 +39,18 @@
     "title": "Admin",
     "manage": "Manage restaurant",
     "backToPos": "← Back to POS",
-    "sections": { "menu": "Menu", "prices": "Prices", "tables": "Tables", "staff": "Staff", "settings": "Settings", "device": "This device" }
+    "sections": {
+      "menu": "Menu",
+      "prices": "Prices",
+      "tables": "Tables",
+      "staff": "Staff",
+      "settings": "Settings",
+      "device": "This device",
+      "reports": "Reports",
+      "history": "History",
+      "dayClose": "Day close",
+      "backup": "Backup"
+    }
   },
   "adminSetup": {
     "active": "Active",
@@ -156,7 +167,10 @@
     "shortCode": "Code",
     "shortCodeHint": "Short code (2 to 5 letters)",
     "foodType": "Veg or non-veg",
-    "food": { "VEG": "Veg", "NON_VEG": "Non-veg" },
+    "food": {
+      "VEG": "Veg",
+      "NON_VEG": "Non-veg"
+    },
     "photoUrl": "Photo link (optional)",
     "station": "Kitchen station (optional)",
     "availableToday": "Available today",
@@ -204,7 +218,12 @@
     "old": "Old ₹",
     "new": "New ₹",
     "reason": "Reason",
-    "reasons": { "MARKET_RATE": "Market rate", "NEW_SEASON": "New season", "CORRECTION": "Correction", "OTHER": "Other" },
+    "reasons": {
+      "MARKET_RATE": "Market rate",
+      "NEW_SEASON": "New season",
+      "CORRECTION": "Correction",
+      "OTHER": "Other"
+    },
     "confirm": "Confirm price",
     "newLinesOnly": "The new price is used for new orders only. Food already sent keeps its old price.",
     "saved": "Price changed",
@@ -589,6 +608,123 @@
       "nameTooLong": "Name is too long. Use 40 letters or fewer.",
       "phoneDigits": "Phone must be 4 to 10 digits.",
       "tokenTaken": "That token is already used today. Tap Get token again."
+    }
+  },
+  "reports": {
+    "todayTitle": "Today's overview",
+    "yesterdayTitle": "Yesterday's overview",
+    "rangeTitle": "Sales for dates",
+    "rangeOf": "{from} to {to}",
+    "archiveIncluded": "includes past months",
+    "download": "Download report",
+    "downloaded": "Report saved.",
+    "period": "Which days",
+    "periods": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "range": "Date range"
+    },
+    "from": "From",
+    "to": "To",
+    "show": "Show",
+    "rangeOrder": "\"From\" must be on or before \"To\".",
+    "loading": "Loading...",
+    "totalSales": "Total sales",
+    "paidBills": "{count} paid bills",
+    "discounts": "Discounts",
+    "exceptionCount": "{count} discounts and exceptions",
+    "cancelled": "Cancelled items",
+    "cancelledSub": "Kept on record, not charged",
+    "paymentSplit": "Payment split",
+    "totalCollected": "Total collected",
+    "topItems": "Top selling items",
+    "sold": "{count} sold",
+    "rankedBy": "Ranked by quantity",
+    "byCategory": "Sales by category",
+    "qty": "{count} cancelled",
+    "exceptions": "Discounts and exceptions",
+    "none": "Nothing for these days.",
+    "methods": {
+      "CASH": "Cash",
+      "UPI": "UPI",
+      "CARD": "Card"
+    },
+    "exceptionTypes": {
+      "DISCOUNT": "Discount",
+      "BILL_REOPEN": "Bill reopened",
+      "CANCEL_AFTER_START": "Cancelled after cooking",
+      "CLOSE_WITH_BALANCE": "Closed with balance",
+      "PAYMENT_VOID": "Payment cancelled"
+    }
+  },
+  "history": {
+    "title": "Find old orders",
+    "date": "Date",
+    "billNo": "Bill number",
+    "table": "Table",
+    "token": "Token",
+    "search": "Search",
+    "noResults": "No orders found.",
+    "order": "Order",
+    "status": "Status",
+    "total": "Total",
+    "tableN": "Table {n}",
+    "statuses": {
+      "OPEN": "Open",
+      "BILLED": "Bill printed",
+      "PAID": "Paid",
+      "CLOSED_EXCEPTION": "Closed with balance",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "dayClose": {
+    "title": "Close the day",
+    "cashTotal": "Cash in drawer",
+    "cashHelp": "Count the cash drawer. Cancelled payments are not counted.",
+    "toSettle": "Bills to settle",
+    "openCount": "{count} open bills",
+    "due": "{amount} due",
+    "collect": "Collect",
+    "closeException": "Close with balance",
+    "reason": "Reason",
+    "orderClosed": "Bill closed.",
+    "settleFirst": "Collect all balances before closing the day.",
+    "allSettled": "All bills are settled.",
+    "closeDay": "Close the day",
+    "done": "Day closed. A backup copy was saved.",
+    "stillOpen": "Some bills are still open.",
+    "tryAgain": "Check and try again.",
+    "snapshotOf": "Day close {date}"
+  },
+  "backup": {
+    "title": "Backup",
+    "live": "Current data file",
+    "download": "Download backup",
+    "downloadOne": "Download",
+    "downloaded": "Backup saved.",
+    "auto": "Automatic copies every 15 minutes and at day close. Restore needs the owner PIN twice.",
+    "snapshots": "Saved copies",
+    "noSnapshots": "No copies listed on this device yet.",
+    "restoreTitle": "Restore from a backup",
+    "restoreHelp": "Choose a backup file. It is checked before anything changes.",
+    "file": "Backup file",
+    "check": "Check file",
+    "rejected": "This file cannot be used: it is not a valid backup.",
+    "pickOther": "Choose another file.",
+    "fileDate": "File date",
+    "orders": "Orders",
+    "payments": "Payments",
+    "warning": "All devices will switch to this data. A copy of the current data is saved first.",
+    "cancel": "Cancel",
+    "restored": "Restored. All devices are reloading.",
+    "reloading": "Restored. Reloading...",
+    "expired": "The check ran out of time.",
+    "pin": {
+      "first": "Owner PIN",
+      "again": "Owner PIN again",
+      "short": "Enter at least 4 digits.",
+      "mismatch": "The two PINs do not match. Start again.",
+      "refused": "PIN not accepted. Start again."
     }
   }
 }
