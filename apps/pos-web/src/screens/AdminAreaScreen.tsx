@@ -1,9 +1,14 @@
+import { useCallback, useState } from 'react';
 import { ROLES, type Role } from '@dhaba/shared';
 import { useI18n } from '../i18n/I18nProvider';
 import { ScreenFrame } from '../components/ScreenFrame';
 import { TopBar } from '../components/TopBar';
+import { ResultBar, type ResultMessage } from '../components/ResultBar';
+import { AdminMenuSection, AdminPricesSection, type AdminMenuApi } from './AdminMenuScreen';
+import '../styles/admin.css';
 
 interface Props {
+  api: AdminMenuApi;
   userName: string;
   deviceLock: Role | null;
   onDeviceLock: (role: Role | null) => void;
@@ -14,15 +19,27 @@ interface Props {
 const LOCK_CHOICES: (Role | null)[] = [null, ...ROLES.filter((r) => r !== 'ADMIN')];
 
 /**
- * Entry of the separate admin area, opened only after the Admin PIN (REQ-031).
- * Holds the one-time device role lock (REQ-022); the admin menu, tables, staff
- * and report screens are added by the admin work.
+ * Sections of the admin area, in the order of the 'Manage restaurant' navigation (Figma 3:30).
+ * Later admin work adds its sections (tables, staff, reports, ...) to this list and to `renderSection`.
  */
-export function AdminAreaScreen({ userName, deviceLock, onDeviceLock, onHome, onSwitchUser }: Props) {
+export const ADMIN_SECTIONS = ['menu', 'prices', 'device'] as const;
+export type AdminSection = (typeof ADMIN_SECTIONS)[number];
+
+/**
+ * The separate admin area, opened only after the Admin PIN (REQ-031): the 'Manage restaurant'
+ * navigation (a side column on desktop, a row of tabs on a phone) and the chosen section.
+ */
+export function AdminAreaScreen({ api, userName, deviceLock, onDeviceLock, onHome, onSwitchUser }: Props) {
   const { t } = useI18n();
-  return (
-    <ScreenFrame title={t('admin.title')} status={<TopBar userName={userName} onSwitchUser={onSwitchUser} />} onBack={onHome} onHome={onHome}>
-      <section className="admin-lock" aria-labelledby="device-lock-title">
+  const [section, setSection] = useState<AdminSection>('menu');
+  const [result, setResult] = useState<ResultMessage | null>(null);
+  const dismiss = useCallback(() => setResult(null), []);
+
+  function renderSection() {
+    if (section === 'menu') return <AdminMenuSection api={api} onResult={setResult} />;
+    if (section === 'prices') return <AdminPricesSection api={api} onResult={setResult} />;
+    return (
+      <section className="admin-lock admin-card" aria-labelledby="device-lock-title">
         <h2 id="device-lock-title" className="section-title">{t('deviceLock.title')}</h2>
         <p className="muted">{t('deviceLock.help')}</p>
         <div className="choice-row" role="group" aria-label={t('deviceLock.title')}>
@@ -33,6 +50,28 @@ export function AdminAreaScreen({ userName, deviceLock, onDeviceLock, onHome, on
           ))}
         </div>
       </section>
+    );
+  }
+
+  return (
+    <ScreenFrame title={t('admin.title')} className="admin-area" status={<TopBar userName={userName} onSwitchUser={onSwitchUser} />} onBack={onHome} onHome={onHome}>
+      <ResultBar message={result} onDismiss={dismiss} />
+      <div className="admin-layout">
+        <nav className="admin-nav" aria-labelledby="admin-nav-title">
+          <h2 id="admin-nav-title" className="admin-nav__title">{t('admin.manage')}</h2>
+          {ADMIN_SECTIONS.map((s) => (
+            <button key={s} type="button" className={`btn admin-nav__item${section === s ? ' admin-nav__item--on' : ''}`}
+              aria-current={section === s ? 'page' : undefined} onClick={() => { setSection(s); setResult(null); }}>
+              {t(`admin.sections.${s}`)}
+            </button>
+          ))}
+          <button type="button" className="btn admin-nav__item admin-nav__back" onClick={onHome}>{t('admin.backToPos')}</button>
+        </nav>
+        <div className="admin-main">
+          <h2 className="admin-main__title">{t(`admin.sections.${section}`)}</h2>
+          {renderSection()}
+        </div>
+      </div>
     </ScreenFrame>
   );
 }

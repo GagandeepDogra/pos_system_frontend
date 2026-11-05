@@ -54,6 +54,19 @@
   `dhaba.session`); `sessionDeadline` = min(12 h, next shift end, JWT exp), null on a kitchen device.
 - `session/deviceLock.ts` — device role lock (`dhaba.deviceRole`), `canOpen`, `homeScreen` (KITCHEN → 'kitchen').
   Set from the admin area (`screens/AdminAreaScreen.tsx`). Add new screen names to `LOCKED_SCREENS`.
+- `screens/AdminAreaScreen.tsx` — admin area (App screen 'admin', Figma 3:30): 'Manage restaurant' nav (240 px side
+  column ≥1024, scrolling tab row below) + one section. Sections are `ADMIN_SECTIONS` ('menu', 'prices', 'device');
+  later admin work adds its own (tables, staff, settings, reports, history, backup) to that list and to
+  `renderSection`, and widens the `api` prop. One `ResultBar` for all sections (`onResult`).
+- `screens/AdminMenuScreen.tsx` + `admin/menuAdminModel.ts` — `AdminMenuSection` (categories → items of the selected
+  category → sizes of the selected item), `AdminPricesSection` and `PriceEditor` (Old ₹ / New ₹ side by side,
+  reason radio chips from `PRICE_CHANGE_REASONS`, Confirm disabled until valid; one Idempotency-Key per open sheet,
+  renewed on a 4xx; 409 stores `current` and asks again). Data comes from GET /menu (the contract has no admin
+  list), merged with rows changed on this device (`mergeRows`) so deactivated rows stay visible to reactivate.
+  Client checks mirror the server (duplicate names, short code 2–5, price > 0, reason enum); `variantUpdateBody`
+  never sends `price`; the availability switch calls only setItemAvailability. Admin lists use `.admin-table`
+  (styles/admin.css): a table on desktop, one card per row < 768 px via `td[data-label]`. `#/design/admin-menu`
+  previews it.
 - `session/approval.ts` — `createApprovalHolder`: single-use Admin approval token, dropped after 2 min.
 - `components/PinPad.tsx` (4-digit large keypad, `shakeKey` shakes once), `components/AdminPinSheet.tsx`
   (Admin PIN override → `createApproval`; use it for every Admin-only action on a cashier phone and pass the token

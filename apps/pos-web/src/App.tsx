@@ -163,6 +163,7 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   } else if (screen === 'admin' && user.role === 'ADMIN' && canOpen(lock, 'admin')) {
     body = (
       <AdminAreaScreen
+        api={ep}
         userName={user.display_name}
         deviceLock={lock}
         onDeviceLock={(r) => { setDeviceLock(r); setLock(r); }}

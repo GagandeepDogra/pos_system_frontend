@@ -1,0 +1,71 @@
+/* Admin area (Figma 3:30 'Owner overview'): Manage restaurant navigation + section, menu and price screens. */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.admin-layout { display: flex; flex-direction: column; gap: var(--space-5); }
+.admin-nav {
+  display: flex; gap: var(--space-3); overflow-x: auto; padding: var(--space-3);
+  background: var(--color-surface); border-radius: var(--radius-lg);
+}
+.admin-nav__title { display: none; margin: 0; font-size: var(--text-body); line-height: var(--text-body-lh); font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; }
+.admin-nav__item { flex: none; min-height: var(--target-min); border-radius: var(--radius-md); font-weight: 600; }
+.btn.admin-nav__item--on { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+.admin-nav__back { min-height: var(--bottom-action); }
+.admin-main { display: flex; flex-direction: column; gap: var(--space-5); min-width: 0; flex: 1; }
+.admin-main__title { margin: 0; font-size: var(--text-figure); font-weight: 700; color: var(--color-text); }
+
+@media (min-width: 1024px) {
+  .admin-layout { flex-direction: row; align-items: flex-start; gap: var(--space-8); }
+  .admin-nav { flex-direction: column; width: 240px; flex: none; padding: var(--space-5); overflow: visible; }
+  .admin-nav__title { display: block; }
+  .admin-nav__item { width: 100%; }
+}
+
+.admin-menu { display: flex; flex-direction: column; gap: var(--space-5); }
+.admin-card {
+  display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-5);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+}
+.admin-card__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+
+/* Desktop: a table. Phone (< 768 px): one card per row, each cell with its label. */
+.admin-table { width: 100%; border-collapse: collapse; font-size: var(--text-body); }
+.admin-table th { text-align: left; font-weight: 600; color: var(--color-text-muted); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); }
+.admin-table td { padding: var(--space-3); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.admin-row--selected { background: var(--color-surface-muted); }
+.admin-actions { text-align: right; }
+.admin-actions .btn { margin: var(--space-1) 0 var(--space-1) var(--gap-tap); }
+.admin-link { background: none; border: 0; padding: 0; min-height: var(--target-min); text-align: left; cursor: pointer; color: var(--color-text); font: inherit; }
+.admin-link:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.admin-sub { display: block; }
+.admin-move { display: inline-flex; gap: var(--space-2); }
+.admin-icon-btn { min-width: var(--target-min); padding: 0; }
+.admin-price { font-size: var(--text-price); line-height: var(--text-price-lh); font-weight: 700; }
+.admin-status { font-weight: 600; white-space: nowrap; }
+.admin-status--on { color: var(--color-success); }
+.admin-status--off { color: var(--color-text-muted); }
+.diet { font-weight: 600; white-space: nowrap; }
+.diet--veg { color: var(--color-success); }
+.diet--nonveg { color: var(--color-danger); }
+.admin-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.btn.admin-switch[aria-checked='true'] { background: var(--color-success-bg); color: var(--color-success); border-color: var(--color-success); }
+.btn.admin-switch[aria-checked='false'] { background: var(--color-danger-bg); color: var(--color-danger); border-color: var(--color-danger); }
+
+@media (max-width: 767px) {
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+  .admin-table tr { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-3); }
+  .admin-table td { border: 0; padding: var(--space-1) 0; }
+  .admin-table td[data-label]::before { content: attr(data-label); display: block; font-size: var(--text-body); color: var(--color-text-muted); }
+  .admin-actions { text-align: left; }
+  .admin-actions .btn { margin: var(--space-1) var(--gap-tap) var(--space-1) 0; }
+}
+
+/* Sheets: wider on desktop so the form is not stretched edge to edge. */
+.admin-sheet { display: flex; flex-direction: column; gap: var(--space-4); max-height: 90vh; overflow-y: auto; }
+@media (min-width: 768px) { .sheet-scrim .admin-sheet { max-width: 640px; margin: 0 auto; } }
+
+/* Price editor (REQ-094): Old ₹ and New ₹ side by side, the reason chips below. */
+.price-pair { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-tap); }
+.price-pair__old { display: flex; align-items: center; background: var(--color-surface-muted); color: var(--color-text-muted); text-decoration: line-through; }
+.price-reasons { flex-wrap: wrap; }
+.price-reasons .btn { flex: 1 1 40%; }

@@ -61,6 +61,11 @@ What is in place today:
 - for the owner an ADMIN button that
   asks for the owner's PIN first. In the admin area a device can be locked to a role, e.g. the kitchen tablet
   then always opens straight to the Kitchen screen;
+- in the admin area, menu management: add, rename, reorder and take categories, items and sizes off the menu
+  (nothing is ever deleted, and anything taken off can be put back), set veg/non-veg, photo link, Hindi name,
+  short code and kitchen station, and mark an item available or not available for today;
+- price changes with the old and new price side by side and a required reason (market rate, new season,
+  correction, other); the new price applies only to new orders;
 - the owner PIN pad for owner-only actions on a cashier's phone;
 - a red "No connection" banner when the counter computer cannot be reached (checked every 3 seconds); sending
   orders and payments is blocked until it is back, and nothing is sent automatically;

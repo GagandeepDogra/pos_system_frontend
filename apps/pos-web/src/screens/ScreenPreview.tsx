@@ -9,6 +9,8 @@ import { OrderScreen } from './OrderScreen';
 import { BillsScreen, PaymentScreen } from './PaymentScreen';
 import { TakeawayScreen } from './TakeawayScreen';
 import { memoryCartStore } from '../cart/cartStore';
+import { AdminAreaScreen } from './AdminAreaScreen';
+import type { AdminMenuApi } from './AdminMenuScreen';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
 const variant = (id: string, name: string, price: string, sort_order = 1) => ({ id, item_id: '', name, price, sort_order, is_active: true, ...audit });
@@ -75,6 +77,26 @@ const noop = () => undefined;
  * real screens with sample data, for screenshots before pos-api exists.
  */
 export function ScreenPreview({ name }: { name: string }) {
+  if (name === 'admin-menu') {
+    const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
+    const cat = (id: string, en: string, hi: string, s: number) => ({ id, name_en: en, name_hi: hi, sort_order: s, is_active: true, ...audit });
+    const v = (id: string, itemId: string, n: string, price: string, s: number) => ({ id, item_id: itemId, name: n, price, sort_order: s, is_active: true, ...audit });
+    const it = (id: string, en: string, hi: string, code: string, food: FoodType, variants: ReturnType<typeof v>[], avail = true) =>
+      ({ id, category_id: 'c1', name_en: en, name_hi: hi, short_code: code, food_type: food, is_active: true, available_today: avail, kitchen_station: null, ...audit, variants });
+    const menu = {
+      categories: [cat('c1', 'Curries', 'करी', 1), cat('c2', 'Breads', 'रोटी', 2), cat('c3', 'Drinks', 'पेय', 3)],
+      items: [
+        it('i1', 'Dal Makhani', 'दाल मखनी', 'DM', 'VEG', [v('v1', 'i1', 'Half', '140.00', 1), v('v2', 'i1', 'Full', '240.00', 2)]),
+        it('i2', 'Butter Chicken', 'बटर चिकन', 'BC', 'NON_VEG', [v('v3', 'i2', 'Half', '220.00', 1), v('v4', 'i2', 'Full', '380.00', 2)], false),
+      ],
+    };
+    const echo = <T,>(_a: unknown, _b: unknown, body?: T) => ok({ ...(body as object), ...audit } as never);
+    const api = {
+      getMenu: () => ok(menu), createCategory: echo, updateCategory: echo, createItem: echo, updateItem: echo,
+      createVariant: echo, updateVariant: echo, changeVariantPrice: echo, setItemAvailability: echo,
+    } as unknown as AdminMenuApi;
+    return <AdminAreaScreen api={api} userName="Gagandeep" deviceLock={null} onDeviceLock={() => {}} onHome={() => {}} onSwitchUser={() => {}} />;
+  }
   if (name === 'tables') {
     return (
       <TablesScreen listTables={() => ok(SAMPLE_ROWS)} userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop}
