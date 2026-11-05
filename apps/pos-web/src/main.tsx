@@ -7,6 +7,7 @@ import './styles/shell.css';
 import './styles/primitives.css';
 import './styles/session.css';
 import './styles/food.css';
+import './styles/order.css';
 import './styles/kitchen.css';
 
 createRoot(document.getElementById('root')!).render(

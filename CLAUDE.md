@@ -47,7 +47,7 @@
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
   'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
-  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood' and 'kitchen' are real). `open(screen, tableFilter?)`
+  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood', 'order' and 'kitchen' are real). `open(screen, tableFilter?)`
   checks `canOpen(deviceLock, screen)`. Every API
   401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
 - `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
@@ -101,6 +101,17 @@
   hidden), `isLate` (> `late_kot_minutes` from GET /settings, default 15), `nextStatus` (one step only). New KOT ids
   after the first load -> `playKotAlert` (Web Audio beep) + blue highlight until pointerdown/click. Out-of-stock
   sheet (KITCHEN/ADMIN role only) lists GET /menu items. `#/design/kitchen` / `#/design/kitchen-dark` preview it.
+- `screens/OrderScreen.tsx` + `order/orderModel.ts` — order view (screen 'order', opened from an Occupied / Ready to
+  Close card; App keeps the tapped card in `selectedTable`). GET /orders/{id} is `OrderDetailView` (shared): `kots[]`
+  with nested `lines`/`items`, or flat `items`/`order_items` matched by `kot_id` -> `kotGroups`. Bill lines =
+  `billLines` (non-cancelled, captured `unit_price`); ALL totals are shown from the server, never computed here.
+  A 403 on cancel/discount opens `AdminPinSheet` and repeats once with the approval token; the PIN is asked up
+  front when `cancelNeedsPin(kot)` (past NEW) or `discountNeedsPin(amount, discount_limit_amount)` for non-Admins.
+  `discountBody` sends `{exception_type:'DISCOUNT', reason_code:'OTHER', reason_text, amount}`. Move/merge sheets
+  list `moveTargets` (AVAILABLE) / `mergeSources` (other open orders) from GET /tables. PRINT BILL calls printBill
+  then `window.print()`; `@media print` in `styles/order.css` shows only `.bill-card` (the receipt page belongs to
+  the payment work). ADD MORE FOOD -> App sets a non-free table `FoodTarget` with the order id, opens 'chooseFood'.
+  `#/design/order` previews it.
 - `kitchen/KitchenNotices.tsx` — chips on non-kitchen sessions (rendered by App) for `kot.status_changed` -> READY and
   `menu.availability_changed` -> unavailable. Alert only; screens still refetch.
 - `styles/kitchen.css` — `.kot-card*`, `.kot-line--cancelled`, `.kitchen-note`, `.kitchen-notice*` (no animation).

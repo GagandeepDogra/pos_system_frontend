@@ -28,6 +28,13 @@ What is in place today:
   and shows its number in green; sent lines are listed in grey under "Sent to kitchen". A slow or lost answer
   is retried safely, so a ticket is never made twice; if some food has just finished, only those lines are
   dropped and the rest stay in the cart;
+- the Order view, opened by tapping an Occupied or Ready to close table: everything sent so far, grouped under
+  each KOT number (sent food in grey, cancelled lines marked), Mark served for ready tickets, and ADD MORE FOOD.
+  A line can be cancelled with a reason; once the kitchen has started it, the owner's PIN is asked for. The bill
+  card shows every line at the price it was ordered at, then subtotal, discount, tax (or "Not configured"),
+  round off and grand total, all as computed by the server. PRINT BILL gives the bill its number and turns the
+  table orange (Ready to close); Discount (₹ or %, with a reason; the owner's PIN above the limit in settings),
+  Move table (free tables only) and Join table (merge another table's order into this bill) sit below it.
 - the Kitchen board (built for a tablet in landscape): New, Preparing and Ready columns side by side, oldest
   ticket first. Each card shows the table or token, KOT number, time sent and minutes waiting, every item with
   its size and quantity, and kitchen notes in a red box; items cancelled after sending are struck through.

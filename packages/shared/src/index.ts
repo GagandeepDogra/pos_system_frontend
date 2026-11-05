@@ -295,6 +295,23 @@ export interface KitchenKotView extends Kot {
   ready_at?: string | null;
 }
 
+/** A KOT inside GET /orders/{id}, optionally with its own lines. */
+export interface OrderKotView extends Kot {
+  lines?: OrderItem[];
+  items?: OrderItem[];
+}
+
+/**
+ * GET /orders/{id}: the server-computed order with its KOTs, lines and payments (REQ-035, REQ-058).
+ * Lines may come nested in each KOT or flat (`items`/`order_items`, matched by `kot_id`).
+ */
+export interface OrderDetailView extends Order {
+  kots?: OrderKotView[];
+  items?: OrderItem[];
+  order_items?: OrderItem[];
+  payments?: Payment[];
+}
+
 /** Available = no OPEN/BILLED order; Occupied = OPEN; Ready to Close = BILLED (REQ-033). */
 export function deriveTableStatus(orderStatus: OrderStatus | null | undefined): TableStatus {
   if (orderStatus === 'OPEN') return 'OCCUPIED';

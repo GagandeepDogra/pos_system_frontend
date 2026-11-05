@@ -18,6 +18,7 @@ import { TablesScreen } from './screens/TablesScreen';
 import { ScreenPreview } from './screens/ScreenPreview';
 import { ChooseFoodScreen, type FoodTarget } from './screens/ChooseFoodScreen';
 import { KitchenScreen } from './screens/KitchenScreen';
+import { OrderScreen } from './screens/OrderScreen';
 import { KitchenNotices } from './kitchen/KitchenNotices';
 import { defaultCartStore, type CartStore } from './cart/cartStore';
 import type { TableCardData } from './components/TableGrid';
@@ -58,7 +59,7 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   /** Status filter for the tables list when opened from a dashboard tile. */
   const [tableFilter, setTableFilter] = useState<TableStatus | null>(null);
   /** The table the user tapped; the order/food screens start from it. */
-  const [, setSelectedTable] = useState<TableCardData | null>(null);
+  const [selectedTable, setSelectedTable] = useState<TableCardData | null>(null);
   /** Whose order food selection adds to; set by the tables grid (and later the takeaway screen). */
   const [foodTarget, setFoodTarget] = useState<FoodTarget | null>(null);
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
@@ -192,7 +193,7 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
         onBack={goHome}
         onTakeaway={() => open('takeaway')}
         onOpenTable={(tb) => {
-          // The order view (occupied tables) replaces its placeholder in its own work.
+          // Available → food selection; Occupied / Ready to Close → the order view (REQ-035).
           setSelectedTable(tb);
           setFoodTarget({
             kind: 'table', tableId: tb.id, table: tb.number, detail: tb.area ?? undefined,
@@ -212,6 +213,27 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
         onSwitchUser={logout}
         onHome={goHome}
         onBack={() => open(foodTarget.kind === 'table' ? 'tables' : 'takeaway')}
+      />
+    );
+  } else if (screen === 'order' && selectedTable?.orderId && canOpen(lock, 'order')) {
+    const tb = selectedTable;
+    body = (
+      <OrderScreen
+        key={tb.orderId}
+        orderId={tb.orderId as string}
+        table={tb.number}
+        tableId={tb.id}
+        role={user.role}
+        api={ep}
+        userName={user.display_name}
+        onSwitchUser={logout}
+        onHome={goHome}
+        onBack={() => open('tables')}
+        onMoved={(o, target) => setSelectedTable({ ...tb, id: target.id, number: target.table_number, area: target.area ?? null, orderId: o.id || tb.orderId })}
+        onAddFood={(o, label) => {
+          setFoodTarget({ kind: 'table', tableId: o.table_id ?? tb.id, table: label, detail: tb.area ?? undefined, orderId: o.id, free: false });
+          open('chooseFood');
+        }}
       />
     );
   } else if (screen === 'kitchen' && canOpen(lock, 'kitchen')) {

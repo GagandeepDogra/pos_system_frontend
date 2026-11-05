@@ -4,7 +4,8 @@ import { DashboardScreen } from './DashboardScreen';
 import { TablesScreen } from './TablesScreen';
 import { ChooseFoodScreen } from './ChooseFoodScreen';
 import { KitchenScreen } from './KitchenScreen';
-import type { KitchenKotView, Setting } from '@dhaba/shared';
+import type { KitchenKotView, Kot, OrderDetailView, OrderItemStatus, Setting } from '@dhaba/shared';
+import { OrderScreen } from './OrderScreen';
 import { memoryCartStore } from '../cart/cartStore';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
@@ -87,6 +88,30 @@ export function ScreenPreview({ name }: { name: string }) {
           listKitchenKots: () => ok(SAMPLE_KOTS), updateKotStatus: () => new Promise(noop),
           getSettings: () => ok({ late_kot_minutes: 15 } as Setting), getMenu: () => ok(SAMPLE_MENU), markItemOutOfStock: () => new Promise(noop),
         }} />
+    );
+  }
+  if (name === 'order') {
+    const base = { order_id: 'ord_5', food_type_snapshot: 'VEG' as const, created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
+    const li = (id: string, kot_id: string, n: string, v: string, price: number, quantity: number, status: OrderItemStatus = 'ACTIVE') => ({
+      ...base, id, kot_id, variant_id: id, item_name_snapshot: n, item_name_hi_snapshot: n, variant_name_snapshot: v,
+      unit_price: price.toFixed(2), quantity, line_total: (price * quantity).toFixed(2), status,
+    });
+    const kt = (id: string, kot_number: number, status: Kot['status']) =>
+      ({ ...base, id, kot_number, status, business_date: '2026-11-05', idempotency_key: id, sent_at: '' });
+    const order = {
+      ...base, id: 'ord_5', order_type: 'DINE_IN', business_date: '2026-11-05', table_id: 'din_05', status: 'OPEN', bill_no: null,
+      subtotal: '800.00', discount_amount: '0.00', tax_amount: '0.00', round_off: '0.00', grand_total: '800.00', paid_amount: '0.00',
+      balance_due: '800.00', client_request_id: 'k', kots: [kt('k11', 11, 'READY'), kt('k14', 14, 'PREPARING')],
+      items: [li('a', 'k11', 'Butter Chicken', 'Half', 220, 1), li('b', 'k11', 'Dal Makhani', 'Full', 240, 1), li('c', 'k11', 'Lassi', 'Sweet', 60, 1, 'CANCELLED'),
+        li('d', 'k14', 'Tandoori Roti', 'Butter', 20, 6), li('e', 'k14', 'Lassi', 'Salted', 50, 2), li('f', 'k14', 'Masala Chai', 'Cup', 20, 6)],
+    } as unknown as OrderDetailView;
+    const never = () => new Promise<never>(noop);
+    return (
+      <OrderScreen orderId="ord_5" table="5" tableId="din_05" role="CASHIER" userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop}
+        onBack={noop} onAddFood={noop}
+        api={{ getOrder: () => ok(order), getSettings: () => ok({ gst_rate_percent: null, discount_limit_amount: '100' } as Setting),
+          listTables: () => ok(SAMPLE_ROWS), cancelOrderItem: never, moveOrder: never, mergeOrders: never, printBill: never,
+          applyDiscount: never, updateKotStatus: never, createApproval: never }} />
     );
   }
   if (name === 'choose-food') {

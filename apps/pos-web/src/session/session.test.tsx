@@ -75,8 +75,9 @@ describe('Login with staff tiles (REQ-024)', () => {
     const { fetchImpl } = fakeServer(baseRoutes());
     render(<App fetchImpl={fetchImpl} />);
     await loginAs('Ramesh', '9999');
+    // Wait for the shake before the message: under load the 400 ms shake can end before the text is found.
+    await waitFor(() => expect(screen.getByTestId('pin-pad')).toHaveClass('pin-pad--shake'), { interval: 10 });
     expect(await screen.findByText('Wrong PIN. 3 tries left.')).toBeInTheDocument();
-    expect(screen.getByTestId('pin-pad')).toHaveClass('pin-pad--shake');
     await waitFor(() => expect(screen.getByTestId('pin-pad')).not.toHaveClass('pin-pad--shake'), { timeout: 1000 });
   });
 
