@@ -186,6 +186,8 @@
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
   caches `/api/`), `register.ts` (prod only). Manifest/icon in `public/`.
 - `styles/tokens.css` — design tokens (CSS variables from the Figma design); `styles/shell.css` — shared classes.
+  The Inter font is bundled (`@fontsource-variable/inter/wght.css`, imported in `main.tsx`; family 'Inter Variable').
+  Money is shown with Indian digit grouping (`formatRupees` → '18,450').
 
 ## Conventions
 - Exception to the animation rule: the PIN pad shakes once (400 ms) on a wrong PIN (ticket requirement); it is off

@@ -13,6 +13,8 @@
 .admin-main__title { margin: 0; font-size: var(--text-figure); font-weight: 700; color: var(--color-text); }
 
 @media (min-width: 1024px) {
+  /* Owner overview: the workspace fills the width with 32 px padding. */
+  .admin-area .screen__body { max-width: none; padding: var(--space-8); }
   .admin-layout { flex-direction: row; align-items: flex-start; gap: var(--space-8); }
   .admin-nav { flex-direction: column; width: 240px; flex: none; padding: var(--space-5); overflow: visible; }
   .admin-nav__title { display: block; }

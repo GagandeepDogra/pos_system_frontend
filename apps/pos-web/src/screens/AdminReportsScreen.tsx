@@ -33,6 +33,14 @@ export function saveBlob(blob: Blob, name: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** '2026-11-05' -> 'Thursday, 5 November 2026' (Figma 3:30); anything else is shown as is. */
+function longDate(isoDay: string, lang: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDay);
+  if (!m) return isoDay;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return d.toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 function useMoney() {
   const { t } = useI18n();
   return useCallback((v: number | string) => t('money.rupees', { amount: formatRupees(v) }), [t]);
@@ -40,7 +48,7 @@ function useMoney() {
 
 /** Reports (REQ-077, Figma 3:30): Today / Yesterday / Date range, totals by method and category, top items, cancellations, exceptions. */
 export function AdminReportsSection({ api, onResult, now = () => new Date() }: SectionProps & { now?: () => Date }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const money = useMoney();
   const fail = useFailText();
   const [today, setToday] = useState(() => businessDate(now()));
@@ -101,7 +109,7 @@ export function AdminReportsSection({ api, onResult, now = () => new Date() }: S
       <div className="admin-reports__head">
         <div>
           <h2 id="reports-title" className="admin-reports__title">{heading}</h2>
-          {report && <p className="muted admin-help">{report.from === report.to ? report.from : t('reports.rangeOf', { from: report.from, to: report.to })}
+          {report && <p className="muted admin-help">{report.from === report.to ? longDate(report.from, lang) : t('reports.rangeOf', { from: report.from, to: report.to })}
             {report.includesArchive ? ` · ${t('reports.archiveIncluded')}` : ''}</p>}
         </div>
         <button type="button" className="btn btn--dark admin-reports__download" disabled={!report} onClick={download}>{t('reports.download')}</button>

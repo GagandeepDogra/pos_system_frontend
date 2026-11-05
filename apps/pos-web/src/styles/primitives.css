@@ -53,6 +53,7 @@
 }
 .context-pill--table { background: var(--color-danger-bg); color: var(--color-danger); }
 .context-pill--token { background: var(--color-info-bg); color: var(--color-info); }
+.context-pill--ready-to-close { background: var(--color-warning-bg); color: var(--color-warning); }
 
 /* Status: always icon + word, never colour alone (REQ-086). */
 .status-label { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 600; }
@@ -64,6 +65,7 @@
 .status--preparing { color: var(--color-amber); }
 .status--ready { color: var(--color-success); }
 .status-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.status-legend .status-label { font-weight: 500; }
 
 /* Type scale (REQ-085). */
 .text-item { font-size: var(--text-item); line-height: var(--text-item-lh); font-weight: 500; }

@@ -3,6 +3,7 @@
   min-height: var(--target-min); width: 100%; padding: var(--space-3); font: inherit; font-weight: 600; text-align: center;
   color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
 }
+.food-search::placeholder { color: var(--color-text); opacity: 1; }
 .food-tabs { display: flex; gap: var(--gap-tap); overflow-x: auto; max-width: 100%; }
 .food-tabs .btn { flex: 1 0 100px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); white-space: nowrap; }
 .food-tabs .btn[aria-pressed='true'] { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
@@ -15,6 +16,8 @@
 .food-tabs--diet .btn { gap: var(--space-1); padding-left: var(--space-1); padding-right: var(--space-1); }
 .food-tabs--diet .diet-dot { width: 12px; height: 12px; }
 .food-tabs--diet .diet-dot::after { width: 4px; height: 4px; }
+/* Phone frame: text-only diet tabs; the desktop frame shows the dot. */
+@media (max-width: 767px) { .food-tabs--diet .diet-dot { display: none; } }
 .food-tabs .btn[aria-pressed='true'] .diet-dot { color: var(--color-on-primary); }
 .food-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); align-items: start; }
 @media (min-width: 768px) { .food-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

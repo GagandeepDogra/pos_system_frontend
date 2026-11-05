@@ -1,6 +1,7 @@
 /* Kitchen · Tablet board (REQ-051 – REQ-056). Colours come from tokens.css, so the dark theme just works. */
 .kitchen-root { min-height: 100vh; background: var(--color-bg); color: var(--color-text); }
 .screen--kitchen .screen__body { gap: var(--space-5); }
+.screen--kitchen .heading { font-size: var(--text-figure); line-height: 43px; }
 
 .kot-card {
   display: flex; flex-direction: column; gap: var(--space-4);

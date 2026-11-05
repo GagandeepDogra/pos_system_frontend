@@ -284,7 +284,7 @@ export function PaymentScreen({ orderId, api, role, userName, onSwitchUser, onHo
     <ScreenFrame
       title={t('pay.title')}
       status={<TopBar userName={userName} onSwitchUser={onSwitchUser} />}
-      context={<ContextPill context={billContext(order, statusWord)} />}
+      context={<ContextPill context={{ ...billContext(order, statusWord), readyToClose: statusWord !== undefined }} />}
       onBack={onBack}
       onHome={onHome}
       className="screen--payment"
