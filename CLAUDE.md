@@ -30,6 +30,21 @@
   user id); `switchUserLanguage` (PATCH /me/language, one refresh on 409).
 - `components/` — `ResultBar` (green 2 s / red with next step), `PendingButton` (disabled + spinner while pending,
   'Checking...' on retry), `KeypadField` (read-only, `inputMode="none"`, opens on-screen keypad).
+- Design-system primitives (build every staff screen from these):
+  - `ScreenFrame` (+ `NavBar`): sticky header with status slot, ← BACK / HOME in fixed slots (omit `onBack` on the
+    dashboard; the slot stays), the `context` pill, body, and ONE `primaryAction` pinned at the bottom (64 px,
+    full width on phone). Never put a second `btn--primary` in the body.
+  - `ContextPill` ('Table 5' / 'Token T-012'), lives in the sticky header so it never scrolls away.
+  - `Status.tsx`: `TableStatusLabel`, `KotStatusLabel`, `TableStatusLegend` — icon + word + colour, never colour alone.
+  - `TableGrid`/`TableCard` (2 cols <768, 4 at 768, 6 at 1024; number 40 px bold, price 24 px bold).
+  - `ConfirmSheet`: NO left, YES right; only for actions where `needsConfirm(action)` is true.
+  - `StatusColumns`: kitchen NEW/PREPARING/READY columns (side by side ≥768 landscape or ≥1024).
+  - `ThemeChoice` + `kitchenThemeClass`: dark theme only when the device role is KITCHEN.
+- `design/rules.ts` — breakpoints, `needsConfirm`, `darkThemeAllowed`, `STAFF_SCREENS` (depth ≤ 2) and `STAFF_FLOWS`
+  (≤ 3 screens): add every new staff screen/flow there; tests enforce the limits. `contrastRatio` for token tests.
+- `styles/primitives.css` — classes for the primitives; type scale classes `.text-item`, `.text-price`,
+  `.text-table-number`; `.choice-row` for segmented tabs. `.theme-kitchen-dark` (tokens.css) overrides the colours.
+- `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `screens/LoginScreen.tsx` — shell start screen (title + language choice); login tiles/PIN come later.
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
   caches `/api/`), `register.ts` (prod only). Manifest/icon in `public/`.
@@ -41,5 +56,9 @@
 - Plain words only: never 'Invoice', 'Submit KOT', 'Void line' in locale files (banned-word scan).
 - No `enum` and no `'A' | 'B'` / `['A','B'] as const` of UPPER_CASE literals in apps — put them in packages/shared.
 - Use the CSS variables from tokens.css, never raw hex. Targets ≥ 56px (`--target-min`).
+- Tests may read stylesheets with `import css from '../styles/x.css?raw'` (pos-web vitest has `css: true`); there
+  are no Node types in the app tsconfig, so do not import `node:fs` in app tests.
+- Only animation allowed: 150 ms press (`--motion-press`) and sheet slide-in (`--motion-sheet`), both off under
+  reduced motion.
 - Test names cite a REQ id (e.g. `REQ-089: ...`).
 - Do not commit `.eos/` (design input, read-only).

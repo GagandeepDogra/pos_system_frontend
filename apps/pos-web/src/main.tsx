@@ -4,6 +4,7 @@ import { App } from './App';
 import { registerServiceWorker } from './pwa/register';
 import './styles/tokens.css';
 import './styles/shell.css';
+import './styles/primitives.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

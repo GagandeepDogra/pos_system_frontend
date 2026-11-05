@@ -41,6 +41,10 @@ npm run dev
 
 Open http://localhost:5173.
 
+While developing, http://localhost:5173/#/design shows the shared screen parts together (table cards,
+status labels, order pill, confirm sheet, kitchen columns, dark kitchen screen). This page is not part of the
+built app.
+
 To try the built app (with the service worker):
 
 ```bash

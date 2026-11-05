@@ -15,6 +15,25 @@
   --color-info: #1d4ed8;
   --color-info-bg: #eff6ff;
   --color-focus: #1d4ed8;
+  --color-amber: #a16207;
+  --color-amber-bg: #fefce8;
+  --color-primary: #111827;
+  --color-on-primary: #ffffff;
+  --color-scrim: rgba(17, 24, 39, 0.5);
+
+  /* Type scale (REQ-085): body 18, item 20, price/total 24 bold, table number 40 bold. */
+  --text-item: 20px;
+  --text-item-lh: 27px;
+  --text-price: 24px;
+  --text-price-lh: 32.5px;
+  --text-table-number: 40px;
+  --text-table-number-lh: 54px;
+
+  /* Motion (REQ-091): only press feedback and sheet slide-in, 150 ms. */
+  --motion-press: 150ms;
+  --motion-sheet: 150ms;
+
+  --gap-tap: 12px;
 
   --font-family: Inter, system-ui, -apple-system, 'Segoe UI', 'Noto Sans Devanagari', Roboto, sans-serif;
   --text-body: 18px;
@@ -39,6 +58,31 @@
 
   --target-min: 56px;
   --bottom-action: 64px;
+}
+
+/* Kitchen dark theme (REQ-092): only applied on the kitchen screen, to cut glare. */
+.theme-kitchen-dark {
+  --color-bg: #0b1120;
+  --color-surface: #111827;
+  --color-surface-muted: #1f2937;
+  --color-border: #374151;
+  --color-text: #f9fafb;
+  --color-text-muted: #d1d5db;
+  --color-success: #4ade80;
+  --color-success-bg: #052e16;
+  --color-danger: #fca5a5;
+  --color-danger-bg: #450a0a;
+  --color-warning: #fdba74;
+  --color-warning-bg: #431407;
+  --color-info: #93c5fd;
+  --color-info-bg: #172554;
+  --color-amber: #fde047;
+  --color-amber-bg: #422006;
+  --color-primary: #f9fafb;
+  --color-on-primary: #111827;
+  --color-focus: #93c5fd;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 *, *::before, *::after { box-sizing: border-box; }

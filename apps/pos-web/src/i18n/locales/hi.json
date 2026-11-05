@@ -58,5 +58,46 @@
     "UNAVAILABLE": "काउंटर कंप्यूटर चालू हो रहा है। थोड़ा रुककर फिर करें।",
     "NETWORK": "काउंटर कंप्यूटर से जुड़ाव नहीं। Wi-Fi देखकर फिर करें।",
     "TIMEOUT": "सेव नहीं हुआ, फिर से करें"
+  },
+  "nav": {
+    "label": "वापस और होम",
+    "back": "← वापस",
+    "home": "होम"
+  },
+  "confirm": {
+    "yes": "हाँ",
+    "no": "नहीं"
+  },
+  "context": {
+    "table": "टेबल {number}",
+    "token": "टोकन {token}"
+  },
+  "tableStatus": {
+    "legend": "टेबल के रंग",
+    "available": "खाली",
+    "occupied": "भरी हुई",
+    "readyToClose": "बिल बाकी"
+  },
+  "kotStatus": {
+    "new": "नया",
+    "preparing": "बन रहा है",
+    "ready": "तैयार"
+  },
+  "table": {
+    "cardLabel": "टेबल {number}, {status}",
+    "seats": "{count} सीट",
+    "tapToStart": "शुरू करने के लिए छुएँ",
+    "minutesOpen": "{count} मिनट से खुली"
+  },
+  "money": {
+    "rupees": "₹{amount}"
+  },
+  "kitchen": {
+    "tickets": "{count} पर्चियाँ"
+  },
+  "theme": {
+    "label": "स्क्रीन का रंग",
+    "light": "हल्की स्क्रीन",
+    "dark": "गहरी स्क्रीन"
   }
 }

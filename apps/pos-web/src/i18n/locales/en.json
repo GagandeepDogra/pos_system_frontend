@@ -58,5 +58,46 @@
     "UNAVAILABLE": "The counter computer is starting. Wait a moment and try again.",
     "NETWORK": "No connection to the counter computer. Check the Wi-Fi and try again.",
     "TIMEOUT": "Not saved, try again"
+  },
+  "nav": {
+    "label": "Back and home",
+    "back": "← Back",
+    "home": "Home"
+  },
+  "confirm": {
+    "yes": "YES",
+    "no": "NO"
+  },
+  "context": {
+    "table": "Table {number}",
+    "token": "Token {token}"
+  },
+  "tableStatus": {
+    "legend": "Table colours",
+    "available": "Available",
+    "occupied": "Occupied",
+    "readyToClose": "Ready to close"
+  },
+  "kotStatus": {
+    "new": "New",
+    "preparing": "Preparing",
+    "ready": "Ready"
+  },
+  "table": {
+    "cardLabel": "Table {number}, {status}",
+    "seats": "{count} seats",
+    "tapToStart": "Tap to start",
+    "minutesOpen": "{count} min open"
+  },
+  "money": {
+    "rupees": "₹{amount}"
+  },
+  "kitchen": {
+    "tickets": "{count} tickets"
+  },
+  "theme": {
+    "label": "Screen colour",
+    "light": "Light screen",
+    "dark": "Dark screen"
   }
 }

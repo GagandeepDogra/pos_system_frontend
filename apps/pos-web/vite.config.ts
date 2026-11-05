@@ -38,5 +38,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test/setup.ts'],
+    // Process CSS so design-rule tests can read the stylesheets through `?raw`.
+    css: true,
   },
 });

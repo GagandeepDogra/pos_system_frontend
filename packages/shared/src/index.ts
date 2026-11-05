@@ -9,6 +9,10 @@ export type Role = (typeof ROLES)[number];
 export const LANGUAGES = ['en', 'hi'] as const;
 export type Language = (typeof LANGUAGES)[number];
 
+/** Derived table status (never stored): no OPEN/BILLED order, OPEN, BILLED. */
+export const TABLE_STATUSES = ['AVAILABLE', 'OCCUPIED', 'READY_TO_CLOSE'] as const;
+export type TableStatus = (typeof TABLE_STATUSES)[number];
+
 export const ORDER_TYPES = ['DINE_IN', 'TAKEAWAY'] as const;
 export type OrderType = (typeof ORDER_TYPES)[number];
 
