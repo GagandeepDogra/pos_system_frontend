@@ -148,7 +148,40 @@
     "loadFailed": "Could not load the tables. Check the Wi-Fi."
   },
   "kitchen": {
-    "tickets": "{count} tickets"
+    "tickets": "{count} tickets",
+    "title": "Kitchen",
+    "intro": "Oldest tickets first",
+    "table": "Table {number}",
+    "kotNumber": "KOT #{number}",
+    "meta": "KOT #{number} · {time} · {minutes} min",
+    "metaReady": "KOT #{number} · Ready {time}",
+    "metaServed": "KOT #{number} · Served {time}",
+    "line": "{qty} × {name}",
+    "lineVariant": "{qty} × {name} — {variant}",
+    "cancelled": "Cancelled",
+    "late": "! Late · {minutes} min",
+    "startPreparing": "Start preparing →",
+    "markReady": "Mark ready ✓",
+    "readyForPickup": "✓ Ready for pickup",
+    "served": "✓ Served",
+    "newTicket": "New ticket",
+    "started": "KOT #{number} started",
+    "markedReady": "KOT #{number} is ready",
+    "footer": "Food ready does not close the bill. Cashier handles payments.",
+    "loadFailed": "Could not load the tickets. Check the Wi-Fi.",
+    "outOfStock": "Out of stock",
+    "outTitle": "Which food is finished?",
+    "outConfirm": "Mark {name} out of stock for today?",
+    "close": "Close",
+    "markedOut": "{name} is out of stock for today",
+    "foodReady": "Food ready · {who}",
+    "outNotice": "Out of stock: {name}",
+    "outNoticeAny": "A food is out of stock",
+    "errors": {
+      "moved": "This ticket changed on another screen. The board is updated.",
+      "outFailed": "Could not mark it out of stock.",
+      "next": "Try again."
+    }
   },
   "theme": {
     "label": "Screen colour",

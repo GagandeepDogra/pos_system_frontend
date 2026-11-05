@@ -17,6 +17,8 @@ import { DesignPreview } from './screens/DesignPreview';
 import { TablesScreen } from './screens/TablesScreen';
 import { ScreenPreview } from './screens/ScreenPreview';
 import { ChooseFoodScreen, type FoodTarget } from './screens/ChooseFoodScreen';
+import { KitchenScreen } from './screens/KitchenScreen';
+import { KitchenNotices } from './kitchen/KitchenNotices';
 import { defaultCartStore, type CartStore } from './cart/cartStore';
 import type { TableCardData } from './components/TableGrid';
 import { createSocketChannel, RealtimeProvider, type RealtimeChannel, type RealtimeFactory } from './realtime/realtime';
@@ -212,6 +214,18 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
         onBack={() => open(foodTarget.kind === 'table' ? 'tables' : 'takeaway')}
       />
     );
+  } else if (screen === 'kitchen' && canOpen(lock, 'kitchen')) {
+    body = (
+      <KitchenScreen
+        api={ep}
+        userName={user.display_name}
+        role={user.role}
+        deviceRole={lock}
+        onSwitchUser={logout}
+        onHome={goHome}
+        onBack={lock === 'KITCHEN' ? undefined : goHome}
+      />
+    );
   } else {
     const shown = canOpen(lock, screen) ? screen : homeScreen(lock);
     body = (
@@ -228,7 +242,11 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   return (
     <I18nProvider lang={lang}>
       <ConnectionProvider check={healthCheck}>
-        <RealtimeProvider channel={session ? channel : null}>{body}</RealtimeProvider>
+        <RealtimeProvider channel={session ? channel : null}>
+          {body}
+          {/* Cashier and admin phones get the food-ready and out-of-stock chips (REQ-052, REQ-056). */}
+          {session && lock !== 'KITCHEN' && session.user.role !== 'KITCHEN' ? <KitchenNotices /> : null}
+        </RealtimeProvider>
       </ConnectionProvider>
     </I18nProvider>
   );

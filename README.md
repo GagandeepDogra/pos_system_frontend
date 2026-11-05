@@ -28,6 +28,15 @@ What is in place today:
   and shows its number in green; sent lines are listed in grey under "Sent to kitchen". A slow or lost answer
   is retried safely, so a ticket is never made twice; if some food has just finished, only those lines are
   dropped and the rest stay in the cart;
+- the Kitchen board (built for a tablet in landscape): New, Preparing and Ready columns side by side, oldest
+  ticket first. Each card shows the table or token, KOT number, time sent and minutes waiting, every item with
+  its size and quantity, and kitchen notes in a red box; items cancelled after sending are struck through.
+  One large button moves a ticket a single step (Start preparing, then Mark ready). A new ticket beeps and
+  stays outlined in blue until someone touches it; tickets waiting longer than the late limit in settings
+  (15 minutes by default) show a red "Late" label. Served tickets disappear 10 minutes after serving or
+  payment. No prices are shown in the kitchen. Kitchen staff can mark a food out of stock for today, and the
+  kitchen tablet offers a dark screen. Cashier phones get a "Food ready · Table 5" chip and an out-of-stock
+  alert;
 - for the owner an ADMIN button that
   asks for the owner's PIN first. In the admin area a device can be locked to a role, e.g. the kitchen tablet
   then always opens straight to the Kitchen screen;
@@ -48,7 +57,8 @@ TypeScript, React 19, Vite 6, Vitest, ESLint. npm workspaces: `apps/pos-web` (th
 - The backend API (served by the counter computer) for live data. During development, the dev server forwards
   `/api` and the live-update channel (`/socket.io`, Socket.IO) to `POS_API_URL` (default
   `http://localhost:3000`). The app shell runs without it. Without a backend, sample screens can be viewed in
-  development at `http://localhost:5173/#/design/dashboard` and `http://localhost:5173/#/design/tables`.
+  development at `http://localhost:5173/#/design/dashboard`, `http://localhost:5173/#/design/tables` and
+  `http://localhost:5173/#/design/kitchen` (`#/design/kitchen-dark` for the dark kitchen screen).
 
 Configuration (optional, see `.env.example`):
 

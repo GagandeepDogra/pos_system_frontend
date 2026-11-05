@@ -3,6 +3,8 @@ import type { ApiResult } from '../api/client';
 import { DashboardScreen } from './DashboardScreen';
 import { TablesScreen } from './TablesScreen';
 import { ChooseFoodScreen } from './ChooseFoodScreen';
+import { KitchenScreen } from './KitchenScreen';
+import type { KitchenKotView, Setting } from '@dhaba/shared';
 import { memoryCartStore } from '../cart/cartStore';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
@@ -46,6 +48,22 @@ const SAMPLE_ROWS: TableView[] = [
   row('07', null),
 ];
 
+const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
+const ln = (id: string, quantity: number, item_name: string, variant_name: string | null, note: string | null = null, cancelled = false) =>
+  ({ id, item_name, variant_name, quantity, note, cancelled });
+const kk = (id: string, n: number, status: KitchenKotView['status'], min: number, who: { table_label?: string; token?: string }, lines: KitchenKotView['lines']): KitchenKotView => ({
+  id, kot_number: n, business_date: '', order_id: `o_${id}`, status, idempotency_key: id, sent_at: ago(min), ready_at: status === 'READY' ? ago(min - 10) : null,
+  order_type: who.token ? 'TAKEAWAY' : 'DINE_IN', ...who, lines, ...audit,
+});
+const SAMPLE_KOTS: KitchenKotView[] = [
+  kk('k37', 37, 'NEW', 2, { table_label: '5' }, [ln('a', 1, 'Butter Chicken', 'Half', 'Less spicy'), ln('b', 1, 'Dal Makhani', 'Full'), ln('c', 6, 'Tandoori Roti', 'Butter')]),
+  kk('k38', 38, 'NEW', 1, { token: 'T-003' }, [ln('d', 1, 'Shahi Paneer', 'Half'), ln('e', 1, 'Jeera Rice', 'Half', null, true)]),
+  kk('k34', 34, 'PREPARING', 18, { table_label: '2' }, [ln('f', 2, 'Dal Tadka', 'Full'), ln('g', 4, 'Lachha Paratha', null)]),
+  kk('k36', 36, 'PREPARING', 6, { token: 'T-002' }, [ln('h', 1, 'Shahi Paneer', 'Full'), ln('i', 2, 'Tandoori Roti', 'Plain'), ln('j', 2, 'Lassi', 'Salted')]),
+  kk('k32', 32, 'READY', 13, { table_label: '3' }, [ln('k', 1, 'Dal Makhani', 'Full'), ln('l', 4, 'Tandoori Roti', 'Butter')]),
+  kk('k33', 33, 'READY', 11, { token: 'T-001' }, [ln('m', 1, 'Shahi Paneer', 'Half'), ln('n', 1, 'Jeera Rice', 'Half'), ln('o', 2, 'Tandoori Roti', 'Butter')]),
+];
+
 const ok = <T,>(data: T) => Promise.resolve({ ok: true, status: 200, data } as ApiResult<T>);
 const noop = () => undefined;
 
@@ -58,6 +76,17 @@ export function ScreenPreview({ name }: { name: string }) {
     return (
       <TablesScreen listTables={() => ok(SAMPLE_ROWS)} userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop}
         onBack={noop} onOpenTable={noop} onTakeaway={noop} />
+    );
+  }
+  if (name === 'kitchen' || name === 'kitchen-dark') {
+    if (name === 'kitchen-dark') localStorage.setItem('dhaba.kitchenDarkTheme', '1');
+    else localStorage.removeItem('dhaba.kitchenDarkTheme');
+    return (
+      <KitchenScreen userName="Suresh" role="KITCHEN" deviceRole="KITCHEN" onSwitchUser={noop} onHome={noop} playSound={noop}
+        api={{
+          listKitchenKots: () => ok(SAMPLE_KOTS), updateKotStatus: () => new Promise(noop),
+          getSettings: () => ok({ late_kot_minutes: 15 } as Setting), getMenu: () => ok(SAMPLE_MENU), markItemOutOfStock: () => new Promise(noop),
+        }} />
     );
   }
   if (name === 'choose-food') {

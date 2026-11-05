@@ -148,7 +148,40 @@
     "loadFailed": "टेबल नहीं खुलीं। वाई-फ़ाई देखें।"
   },
   "kitchen": {
-    "tickets": "{count} पर्चियाँ"
+    "tickets": "{count} पर्चियाँ",
+    "title": "रसोई",
+    "intro": "सबसे पुरानी पर्ची पहले",
+    "table": "टेबल {number}",
+    "kotNumber": "पर्ची #{number}",
+    "meta": "पर्ची #{number} · {time} · {minutes} मिनट",
+    "metaReady": "पर्ची #{number} · तैयार {time}",
+    "metaServed": "पर्ची #{number} · परोसा {time}",
+    "line": "{qty} × {name}",
+    "lineVariant": "{qty} × {name} — {variant}",
+    "cancelled": "रद्द",
+    "late": "! देर · {minutes} मिनट",
+    "startPreparing": "बनाना शुरू →",
+    "markReady": "तैयार ✓",
+    "readyForPickup": "✓ ले जाने को तैयार",
+    "served": "✓ परोस दिया",
+    "newTicket": "नई पर्ची",
+    "started": "पर्ची #{number} शुरू",
+    "markedReady": "पर्ची #{number} तैयार",
+    "footer": "खाना तैयार होने से बिल बंद नहीं होता। पैसे कैशियर लेता है।",
+    "loadFailed": "पर्चियाँ नहीं खुलीं। वाई-फ़ाई देखें।",
+    "outOfStock": "खत्म",
+    "outTitle": "कौन सा खाना खत्म हुआ?",
+    "outConfirm": "{name} आज के लिए खत्म करें?",
+    "close": "बंद करें",
+    "markedOut": "{name} आज के लिए खत्म",
+    "foodReady": "खाना तैयार · {who}",
+    "outNotice": "खत्म: {name}",
+    "outNoticeAny": "एक खाना खत्म हो गया",
+    "errors": {
+      "moved": "यह पर्ची दूसरी स्क्रीन पर बदली। बोर्ड नया हो गया।",
+      "outFailed": "खत्म नहीं हो सका।",
+      "next": "फिर से कोशिश करें।"
+    }
   },
   "theme": {
     "label": "स्क्रीन का रंग",

@@ -269,6 +269,32 @@ export interface MenuView {
   items: MenuItemView[];
 }
 
+/**
+ * One line of a kitchen card (GET /kitchen/kots): names, variant, quantity, note and
+ * the cancelled flag. Never carries a price (REQ-021).
+ */
+export interface KitchenKotLine {
+  id: string;
+  item_id?: string | null;
+  item_name: string;
+  item_name_hi?: string | null;
+  variant_name?: string | null;
+  quantity: number;
+  note?: string | null;
+  cancelled: boolean;
+}
+
+/** One KOT of GET /kitchen/kots: the KOT plus table/token, lines, minutes waiting and the late flag. */
+export interface KitchenKotView extends Kot {
+  order_type?: OrderType | null;
+  table_label?: string | null;
+  token?: string | null;
+  lines: KitchenKotLine[];
+  minutes_waiting?: number | null;
+  is_late?: boolean | null;
+  ready_at?: string | null;
+}
+
 /** Available = no OPEN/BILLED order; Occupied = OPEN; Ready to Close = BILLED (REQ-033). */
 export function deriveTableStatus(orderStatus: OrderStatus | null | undefined): TableStatus {
   if (orderStatus === 'OPEN') return 'OCCUPIED';

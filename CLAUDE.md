@@ -47,7 +47,7 @@
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
   'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
-  swap the branch in App for the real screen; 'dashboard' and 'tables' are real). `open(screen, tableFilter?)`
+  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood' and 'kitchen' are real). `open(screen, tableFilter?)`
   checks `canOpen(deviceLock, screen)`. Every API
   401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
 - `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
@@ -94,6 +94,16 @@
   (retry with same key); a 4xx clears it.
 - `cart/cartStore.ts` — `CartStore` (IndexedDB `dhaba-pos`/`carts`, localStorage fallback, `memoryCartStore` for
   tests); key `table:<id>` or `order:<id>`. App takes an optional `cartStore` prop.
+- `screens/KitchenScreen.tsx` + `kitchen/kitchenModel.ts` — kitchen board (screen 'kitchen'). GET /kitchen/kots rows
+  are `KitchenKotView` (shared: `lines[]` with `item_name`, `variant_name`, `quantity`, `note`, `cancelled`, plus
+  `table_label`/`token`, `minutes_waiting`, `is_late`, `ready_at`); `normaliseKot` also accepts order-item shaped
+  lines and copies NO money field. `boardColumns` (oldest first; SERVED stays in READY until `hide_after`; CANCELLED
+  hidden), `isLate` (> `late_kot_minutes` from GET /settings, default 15), `nextStatus` (one step only). New KOT ids
+  after the first load -> `playKotAlert` (Web Audio beep) + blue highlight until pointerdown/click. Out-of-stock
+  sheet (KITCHEN/ADMIN role only) lists GET /menu items. `#/design/kitchen` / `#/design/kitchen-dark` preview it.
+- `kitchen/KitchenNotices.tsx` — chips on non-kitchen sessions (rendered by App) for `kot.status_changed` -> READY and
+  `menu.availability_changed` -> unavailable. Alert only; screens still refetch.
+- `styles/kitchen.css` — `.kot-card*`, `.kot-line--cancelled`, `.kitchen-note`, `.kitchen-notice*` (no animation).
 - `styles/food.css` — food screen classes (`.food-card`, `.food-tabs`, `.cart-*`, `.note-label` boxed red note).
 - `styles/session.css` — classes for the above. Icons in `public/icons/` (from the design assets).
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
