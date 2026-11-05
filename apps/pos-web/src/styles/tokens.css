@@ -28,6 +28,8 @@
   --text-price-lh: 32.5px;
   --text-table-number: 40px;
   --text-table-number-lh: 54px;
+  --text-token: 64px;
+  --text-token-lh: 77px;
 
   /* Motion (REQ-091): only press feedback and sheet slide-in, 150 ms. */
   --motion-press: 150ms;

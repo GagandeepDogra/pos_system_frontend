@@ -7,6 +7,7 @@ import { KitchenScreen } from './KitchenScreen';
 import type { KitchenKotView, Kot, Order, OrderDetailView, Payment, OrderItemStatus, Setting } from '@dhaba/shared';
 import { OrderScreen } from './OrderScreen';
 import { BillsScreen, PaymentScreen } from './PaymentScreen';
+import { TakeawayScreen } from './TakeawayScreen';
 import { memoryCartStore } from '../cart/cartStore';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
@@ -130,6 +131,21 @@ export function ScreenPreview({ name }: { name: string }) {
         api={{ getOrder: () => ok(order), getSettings: () => ok({ gst_rate_percent: null, discount_limit_amount: '100' } as Setting),
           listTables: () => ok(SAMPLE_ROWS), cancelOrderItem: never, moveOrder: never, mergeOrders: never, printBill: never,
           applyDiscount: never, updateKotStatus: never, createApproval: never }} />
+    );
+  }
+  if (name === 'takeaway') {
+    const tw = (token: string, status: Order['status'], kot: Kot['status'], count: number, total: string, paid: boolean) => ({
+      id: `ord_${token}`, order_type: 'TAKEAWAY', business_date: '2026-11-05', token, status, subtotal: total, discount_amount: '0',
+      tax_amount: '0', round_off: '0', grand_total: total, paid_amount: paid ? total : '0', balance_due: paid ? '0' : total,
+      client_request_id: token, created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1,
+      item_count: count, kot_status: kot,
+    });
+    const rows = [tw('T-001', 'OPEN', 'READY', 3, '300', false), tw('T-002', 'PAID', 'PREPARING', 4, '420', true), tw('T-003', 'OPEN', 'NEW', 2, '260', false)];
+    return (
+      <TakeawayScreen userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop} onBack={noop} onAddFood={noop} onCollect={noop}
+        onViewPayments={noop}
+        api={{ listActiveTakeaways: () => ok(rows as Order[]), handOverTakeaway: () => new Promise<never>(noop),
+          createTakeaway: () => ok({ ...rows[0], id: 'ord_T-004', token: 'T-004' } as Order) }} />
     );
   }
   if (name === 'choose-food') {

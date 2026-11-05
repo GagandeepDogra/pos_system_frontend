@@ -312,6 +312,16 @@ export interface OrderDetailView extends Order {
   payments?: Payment[];
 }
 
+/**
+ * One row of GET /takeaways (an Order). The server may add the item count and the kitchen status directly
+ * (`item_count`, `kot_status`/`kitchen_status`) or nest `kots`/`items`; the takeaway screen accepts all of them.
+ */
+export interface TakeawayView extends OrderDetailView {
+  item_count?: number | null;
+  kot_status?: KotStatus | null;
+  kitchen_status?: KotStatus | null;
+}
+
 /** Available = no OPEN/BILLED order; Occupied = OPEN; Ready to Close = BILLED (REQ-033). */
 export function deriveTableStatus(orderStatus: OrderStatus | null | undefined): TableStatus {
   if (orderStatus === 'OPEN') return 'OCCUPIED';

@@ -47,7 +47,7 @@
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
   'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
-  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood', 'order', 'kitchen', 'bills' and 'payment' are real). `open(screen, tableFilter?)`
+  swap the branch in App for the real screen; 'dashboard', 'tables', 'takeaway', 'chooseFood', 'order', 'kitchen', 'bills' and 'payment' are real). `open(screen, tableFilter?)`
   checks `canOpen(deviceLock, screen)`. Every API
   401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
 - `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
@@ -123,6 +123,14 @@
   printer error, never undoes a payment. `.receipt` (styles/payment.css) is print-only at 48 mm with
   `overflow-wrap:anywhere` (58 and 80 mm rolls). `maybePrintKot` (KitchenScreen `printKot` prop) prints a new KOT
   only when settings.kitchen_print_enabled. `#/design/payment`, `#/design/bills` preview them.
+- `screens/TakeawayScreen.tsx` + `takeaway/takeawayModel.ts` — screen 'takeaway' (Figma node 3:18). GET /takeaways rows
+  are `TakeawayView` (shared: Order + optional `item_count`, `kot_status`/`kitchen_status`, or nested `kots`/`items`);
+  `activeTakeaways` drops handed-over/cancelled/closed rows, newest token first; `isPaid` (PAID or balance 0 on a
+  non-empty bill); `takeawayBody` (name ≤ 40, phone empty or 4–10 digits). NEW TAKEAWAY sheet: one Idempotency-Key per
+  sheet (kept on timeout/5xx), 409 = token clash message, then the big token (`--text-token`) with Add food →
+  App sets a `{kind:'token'}` FoodTarget. HANDED OVER shows on Ready cards; the server decides (422 → red bar, token
+  stays). Collect opens 'payment' with App `payReturn='takeaway'` (Back/Done return there). `.btn--dark` (takeaway.css)
+  is a dark filled button that is NOT the screen's primary action. `#/design/takeaway` previews it.
 - `kitchen/KitchenNotices.tsx` — chips on non-kitchen sessions (rendered by App) for `kot.status_changed` -> READY and
   `menu.availability_changed` -> unavailable. Alert only; screens still refetch.
 - `styles/kitchen.css` — `.kot-card*`, `.kot-line--cancelled`, `.kitchen-note`, `.kitchen-notice*` (no animation).

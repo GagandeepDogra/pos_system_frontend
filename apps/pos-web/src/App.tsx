@@ -12,6 +12,7 @@ import { createApprovalHolder } from './session/approval';
 import { LoginScreen } from './screens/LoginScreen';
 import { DashboardScreen } from './screens/DashboardScreen';
 import { AdminAreaScreen } from './screens/AdminAreaScreen';
+import { TakeawayScreen } from './screens/TakeawayScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { DesignPreview } from './screens/DesignPreview';
 import { TablesScreen } from './screens/TablesScreen';
@@ -65,6 +66,8 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   const [foodTarget, setFoodTarget] = useState<FoodTarget | null>(null);
   /** The open bill the payment screen settles. */
   const [billOrderId, setBillOrderId] = useState<string | null>(null);
+  /** Where the payment screen goes back to: the bills list, or the takeaway list it was opened from. */
+  const [payReturn, setPayReturn] = useState<'bills' | 'takeaway'>('bills');
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const token = session?.token;
   useEffect(() => {
@@ -242,12 +245,25 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   } else if (screen === 'bills' && user.role !== 'KITCHEN' && canOpen(lock, 'bills')) {
     body = (
       <BillsScreen api={ep} userName={user.display_name} onSwitchUser={logout} onHome={goHome} onBack={goHome}
-        onOpenBill={(o) => { setBillOrderId(o.id); open('payment'); }} />
+        onOpenBill={(o) => { setBillOrderId(o.id); setPayReturn('bills'); open('payment'); }} />
     );
   } else if (screen === 'payment' && billOrderId && canOpen(lock, 'payment')) {
     body = (
       <PaymentScreen key={billOrderId} orderId={billOrderId} api={ep} role={user.role} userName={user.display_name}
-        onSwitchUser={logout} onHome={goHome} onBack={() => open('bills')} onDone={() => open('bills')} />
+        onSwitchUser={logout} onHome={goHome} onBack={() => open(payReturn)} onDone={() => open(payReturn)} />
+    );
+  } else if (screen === 'takeaway' && user.role !== 'KITCHEN' && canOpen(lock, 'takeaway')) {
+    body = (
+      <TakeawayScreen
+        api={ep}
+        userName={user.display_name}
+        onSwitchUser={logout}
+        onHome={goHome}
+        onBack={goHome}
+        onAddFood={(tk, orderId) => { setFoodTarget({ kind: 'token', token: tk, orderId }); open('chooseFood'); }}
+        onCollect={(orderId) => { setBillOrderId(orderId); setPayReturn('takeaway'); open('payment'); }}
+        onViewPayments={() => open('bills')}
+      />
     );
   } else if (screen === 'kitchen' && canOpen(lock, 'kitchen')) {
     body = (

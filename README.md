@@ -42,6 +42,13 @@ What is in place today:
   (WhatsApp text) and Done. The owner (or a cashier with the owner's PIN) can void a payment or close a bill
   with a balance, with a reason. Receipts print through the browser to an 80 mm or 58 mm thermal printer;
   a printer problem never undoes a payment. Kitchen KOTs are printed only if kitchen printing is switched on.
+- the Takeaway screen: every active takeaway as a card with its token (T-001, T-002 ... from the server, starting
+  again each business day), item count and total, the kitchen status (New, Preparing, Ready) and Paid / Unpaid.
+  "+ New takeaway" asks for an optional customer name and phone (the last 4 digits are enough; both may be left
+  empty), then shows the new token in large figures with Add food. A takeaway can be paid before or after
+  cooking: a Ready but unpaid token stays in the list with "Collect ₹… →"; HANDED OVER on a Ready and Paid token
+  removes it from the list (the server refuses it for an unpaid or not-ready token). View payments opens the
+  bills list;
 - the Kitchen board (built for a tablet in landscape): New, Preparing and Ready columns side by side, oldest
   ticket first. Each card shows the table or token, KOT number, time sent and minutes waiting, every item with
   its size and quantity, and kitchen notes in a red box; items cancelled after sending are struck through.

@@ -1,0 +1,43 @@
+/* Takeaway · Phone (Figma node 3:18): active token list, new-takeaway sheet with the big token. */
+.screen--takeaway .takeaway__new { min-height: var(--bottom-action); }
+.takeaway__message,
+.takeaway__note { margin: 0; color: var(--color-text-muted); font-size: var(--text-body); line-height: var(--text-body-lh); }
+
+/* A dark filled button that is not the screen's one primary action (Collect, Handed over, Add food). */
+.btn.btn--dark { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+.btn.btn--dark:active:not(:disabled) { background: var(--color-text-muted); }
+
+.takeaway-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+.takeaway-card {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4); background: var(--color-surface);
+  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+}
+.takeaway-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
+.takeaway-card__token,
+.takeaway-card__paid { font-size: var(--text-price); line-height: var(--text-price-lh); color: var(--color-text); }
+.takeaway-card__token { font-weight: 400; }
+.takeaway-card__paid { font-weight: 600; }
+.takeaway-card__summary,
+.takeaway-card__customer { margin: 0; font-size: var(--text-body); line-height: var(--text-body-lh); color: var(--color-text-muted); }
+.takeaway-card .btn { min-height: var(--target-min); }
+
+.takeaway-kitchen {
+  margin: 0; display: flex; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-sm);
+  font-size: var(--text-body); line-height: var(--text-body-lh); font-weight: 500;
+}
+.takeaway-kitchen--new { background: var(--color-info-bg); color: var(--color-info); }
+.takeaway-kitchen--preparing { background: var(--color-amber-bg); color: var(--color-amber); }
+.takeaway-kitchen--ready { background: var(--color-success-bg); color: var(--color-success); }
+.takeaway-kitchen--none { background: var(--color-surface-muted); color: var(--color-text-muted); }
+
+.takeaway__payments { min-height: var(--bottom-action); }
+
+.takeaway-sheet { display: flex; flex-direction: column; gap: var(--space-3); }
+.takeaway-sheet__token {
+  margin: 0; text-align: center; font-size: var(--text-token); line-height: var(--text-token-lh);
+  font-weight: 700; color: var(--color-text); letter-spacing: 0.02em;
+}
+.takeaway-sheet__hint { margin: 0; color: var(--color-text-muted); font-size: var(--text-body); line-height: var(--text-body-lh); }
+.takeaway-sheet__error { margin: 0; color: var(--color-danger); font-size: var(--text-body); line-height: var(--text-body-lh); font-weight: 600; }
+.takeaway-sheet__field > span { font-weight: 600; font-size: var(--text-body); line-height: var(--text-body-lh); }
