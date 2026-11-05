@@ -1,5 +1,5 @@
 import type {
-  Category, DiningTable, Item, Kot, Language, Order, OrderException, OrderItem, Payment, PriceChange, Setting, User, Variant,
+  Category, DashboardTiles, DiningTable, TableView, Item, Kot, Language, Order, OrderException, OrderItem, Payment, PriceChange, Setting, User, Variant,
 } from '@dhaba/shared';
 import type { ApiClient, RequestOptions } from './client';
 
@@ -22,8 +22,8 @@ export function endpoints(api: ApiClient) {
       r<{ approval_token: string; admin_id: string }>('/auth/approvals', { method: 'POST', idempotencyKey: key, body }),
     updateMyLanguage: (rowVersion: number, language: Language, x?: Extra) =>
       r<User>('/me/language', { method: 'PATCH', ifMatch: rowVersion, body: { language }, ...x }),
-    getDashboard: () => r<Record<string, unknown>>('/dashboard'),
-    listTables: (query?: { area?: string; status?: string }) => r<DiningTable[]>('/tables', { query }),
+    getDashboard: () => r<DashboardTiles>('/dashboard'),
+    listTables: (query?: { area?: string; status?: string }) => r<TableView[]>('/tables', { query }),
     openTableSession: (key: string, body: Partial<Order>, x?: Extra) =>
       r<Order>('/orders/dine-in', { method: 'POST', idempotencyKey: key, body, ...x }),
     createTakeaway: (key: string, body: Partial<Order>, x?: Extra) =>

@@ -243,6 +243,49 @@ export interface PriceChange {
   created_at: string;
 }
 
+/**
+ * One row of GET /tables: the table plus its derived state (REQ-032, REQ-033).
+ * `status` is derived by the server from the table's OPEN/BILLED order; when a
+ * server sends only `order_status`, clients derive it with `deriveTableStatus`.
+ * Money fields are omitted for Kitchen callers.
+ */
+export interface TableView extends DiningTable {
+  status?: TableStatus;
+  order_status?: OrderStatus | null;
+  order_id?: string | null;
+  running_amount?: Decimal | null;
+  opened_at?: string | null;
+  minutes_open?: number | null;
+}
+
+/** Available = no OPEN/BILLED order; Occupied = OPEN; Ready to Close = BILLED (REQ-033). */
+export function deriveTableStatus(orderStatus: OrderStatus | null | undefined): TableStatus {
+  if (orderStatus === 'OPEN') return 'OCCUPIED';
+  if (orderStatus === 'BILLED') return 'READY_TO_CLOSE';
+  return 'AVAILABLE';
+}
+
+/** GET /dashboard: counts for every role; `todays_sales` only for Admin (REQ-029). */
+export interface DashboardTiles {
+  active_tables: number;
+  pending_kots: number;
+  ready_orders: number;
+  open_takeaways?: number;
+  todays_sales?: Decimal | null;
+}
+
+/** Socket.IO events pushed after each committed write (REQ-116). */
+export const REALTIME_EVENTS = [
+  'kot.created',
+  'kot.status_changed',
+  'order.updated',
+  'table.status_changed',
+  'payment.recorded',
+  'menu.availability_changed',
+  'dashboard.updated',
+] as const;
+export type RealtimeEvent = (typeof REALTIME_EVENTS)[number];
+
 export function isLanguage(v: unknown): v is Language {
   return typeof v === 'string' && (LANGUAGES as readonly string[]).includes(v);
 }

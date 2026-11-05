@@ -130,6 +130,23 @@
   "money": {
     "rupees": "₹{amount}"
   },
+  "tiles": {
+    "rightNow": "Right now",
+    "todaysSales": "Today's sales",
+    "activeTables": "Active tables",
+    "pendingKots": "Kitchen pending",
+    "readyOrders": "Ready to serve",
+    "openTakeaways": "Open takeaways"
+  },
+  "tables": {
+    "title": "Dine-in / Tables",
+    "intro": "Tap a table to take or view an order.",
+    "areas": "Areas",
+    "all": "All",
+    "toTakeaway": "{label} →",
+    "empty": "No tables here.",
+    "loadFailed": "Could not load the tables. Check the Wi-Fi."
+  },
   "kitchen": {
     "tickets": "{count} tickets"
   },

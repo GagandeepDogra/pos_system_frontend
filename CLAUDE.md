@@ -47,7 +47,8 @@
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
   'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
-  swap the branch in App for the real screen). `open(screen)` checks `canOpen(deviceLock, screen)`. Every API
+  swap the branch in App for the real screen; 'dashboard' and 'tables' are real). `open(screen, tableFilter?)`
+  checks `canOpen(deviceLock, screen)`. Every API
   401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
 - `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
   `dhaba.session`); `sessionDeadline` = min(12 h, next shift end, JWT exp), null on a kitchen device.
@@ -62,8 +63,23 @@
   (green line / red banner). `PendingButton` is disabled while offline (`needsConnection={false}` to opt out):
   use it for Send/Pay. Never auto-submit on reconnect.
 - `screens/LoginScreen.tsx` — staff tiles (active only) + PIN pad, language choice; also the user-switch screen.
-- `screens/DashboardScreen.tsx` — Home shell: greeting, 4 `pair()` buttons, ADMIN (Admins, needs PIN), language,
-  switch-user bar. The "Right now" live counts are added by the dashboard ticket.
+- `screens/DashboardScreen.tsx` — Home: greeting, `pair()` buttons filtered by `ROLE_ACTIONS` (KITCHEN → kitchen
+  only), live "Right now" tiles from GET /dashboard (`DashboardTiles` in shared; `todays_sales` shown to ADMIN
+  only), ADMIN (needs PIN), language, switch-user bar. `.dashboard .workspace` uses 12 px side padding so each
+  primary button is ≥ 45% of a 360 px screen (test enforces it).
+- `screens/TablesScreen.tsx` + `screens/tablesModel.ts` — table grid: area tabs (All + distinct areas; null area
+  only under All), legend, live `TableGrid`, pinned "Takeaway →". `statusFilter` ('OCCUPIED' from the Active
+  tables tile) lists only those tables. GET /tables rows are `TableView` (shared): `status` (or `order_status`
+  → `deriveTableStatus`), `running_amount`, `minutes_open`/`opened_at`, `order_id`. Tapping a card calls App's
+  `onOpenTable` → 'chooseFood' (Available) or 'order' (otherwise); the tapped card is kept in App state
+  (`setSelectedTable`) for those screens.
+- `realtime/realtime.tsx` — `RealtimeChannel` (Socket.IO at `/socket.io`, `auth.token`), `RealtimeProvider`,
+  `createMemoryChannel()` for tests (`emit`, `reconnect`), and `useLiveData(load, events)`: loads a GET, refetches
+  (150 ms debounce) on the given events, on socket reconnect and when /health comes back. Use it for every live
+  screen; never patch state from an event payload alone. App creates the channel per session token; `App`
+  takes `realtime` (factory) — null under unit tests by default. Event names: `REALTIME_EVENTS` in shared.
+- `screens/ScreenPreview.tsx` — dev-only real screens with sample data at `#/design/dashboard`,
+  `#/design/dashboard-admin`, `#/design/dashboard-kitchen`, `#/design/tables`.
 - `styles/session.css` — classes for the above. Icons in `public/icons/` (from the design assets).
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
   caches `/api/`), `register.ts` (prod only). Manifest/icon in `public/`.

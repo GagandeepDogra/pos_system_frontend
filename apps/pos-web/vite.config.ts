@@ -31,7 +31,11 @@ function serviceWorker(): Plugin {
 export default defineConfig({
   plugins: [react(), serviceWorker()],
   server: {
-    proxy: { '/api': process.env.POS_API_URL ?? 'http://localhost:3000' },
+    proxy: {
+      '/api': process.env.POS_API_URL ?? 'http://localhost:3000',
+      // Realtime events (Socket.IO) from the same server.
+      '/socket.io': { target: process.env.POS_API_URL ?? 'http://localhost:3000', ws: true },
+    },
   },
   test: {
     name: 'pos-web',

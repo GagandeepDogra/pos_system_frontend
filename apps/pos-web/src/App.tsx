@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { Language, Role, User } from '@dhaba/shared';
+import type { Language, Role, TableStatus, User } from '@dhaba/shared';
 import { I18nProvider } from './i18n/I18nProvider';
 import { getUserLanguage, setUserLanguage } from './i18n/languageStore';
 import { switchUserLanguage } from './i18n/switchLanguage';
@@ -14,6 +14,10 @@ import { DashboardScreen } from './screens/DashboardScreen';
 import { AdminAreaScreen } from './screens/AdminAreaScreen';
 import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { DesignPreview } from './screens/DesignPreview';
+import { TablesScreen } from './screens/TablesScreen';
+import { ScreenPreview } from './screens/ScreenPreview';
+import type { TableCardData } from './components/TableGrid';
+import { createSocketChannel, RealtimeProvider, type RealtimeChannel, type RealtimeFactory } from './realtime/realtime';
 
 /** Before anyone logs in, the login screen uses the device's last choice. */
 const DEVICE_USER = '__device__';
@@ -29,12 +33,36 @@ function startSession(): Session | null {
   return s;
 }
 
-export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
+/** Socket.IO in the app; no socket under unit tests unless a test passes its own channel. */
+const DEFAULT_REALTIME: RealtimeFactory | null = import.meta.env.MODE === 'test' ? null : createSocketChannel;
+
+interface AppProps {
+  fetchImpl?: typeof fetch;
+  /** Builds the realtime channel for a session token (tests pass a memory channel). */
+  realtime?: RealtimeFactory | null;
+}
+
+export function App({ fetchImpl, realtime = DEFAULT_REALTIME }: AppProps = {}) {
   const [session, setSession] = useState<Session | null>(startSession);
   const sessionRef = useRef(session);
   sessionRef.current = session;
   const [lock, setLock] = useState<Role | null>(() => getDeviceLock());
   const [screen, setScreen] = useState<string>(() => homeScreen(getDeviceLock()));
+  /** Status filter for the tables list when opened from a dashboard tile. */
+  const [tableFilter, setTableFilter] = useState<TableStatus | null>(null);
+  /** The table the user tapped; the order/food screens start from it. */
+  const [, setSelectedTable] = useState<TableCardData | null>(null);
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
+  const token = session?.token;
+  useEffect(() => {
+    if (!token || !realtime) return;
+    const c = realtime(token);
+    setChannel(c);
+    return () => {
+      c.close();
+      setChannel(null);
+    };
+  }, [token, realtime]);
   const [deviceLang, setDeviceLang] = useState<Language>(() => getUserLanguage(DEVICE_USER));
   const approvals = useMemo(() => createApprovalHolder(), []);
 
@@ -82,8 +110,10 @@ export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
     }
   };
 
-  const open = (target: string) => {
-    if (canOpen(lock, target)) setScreen(target);
+  const open = (target: string, filter: TableStatus | null = null) => {
+    if (!canOpen(lock, target)) return;
+    setTableFilter(filter);
+    setScreen(target);
   };
   const goHome = () => setScreen(homeScreen(lock));
 
@@ -109,6 +139,9 @@ export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
 
   let body;
   if (import.meta.env.DEV && window.location.hash === '#/design') body = <DesignPreview />;
+  else if (import.meta.env.DEV && window.location.hash.startsWith('#/design/')) {
+    body = <ScreenPreview name={window.location.hash.slice('#/design/'.length)} />;
+  }
   else if (!session || !user) {
     body = <LoginScreen api={ep} kitchenDevice={lock === 'KITCHEN'} onLanguage={(l) => void chooseLanguage(l)} onLoggedIn={(tk, u) => void onLoggedIn(tk, u)} />;
   } else if (screen === 'admin' && user.role === 'ADMIN' && canOpen(lock, 'admin')) {
@@ -125,7 +158,9 @@ export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
     body = (
       <DashboardScreen
         user={user}
-        onOpen={open}
+        getDashboard={ep.getDashboard}
+        onOpenActiveTables={() => open('tables', 'OCCUPIED')}
+        onOpen={(s) => open(s)}
         onSwitchUser={logout}
         onLanguage={(l) => void chooseLanguage(l)}
         createApproval={ep.createApproval}
@@ -133,6 +168,24 @@ export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
           approvals.put(token, adminId);
           // Entering the admin area uses the single-use approval.
           if (approvals.take()) setScreen('admin');
+        }}
+      />
+    );
+  } else if (screen === 'tables' && canOpen(lock, 'tables')) {
+    body = (
+      <TablesScreen
+        key={tableFilter ?? 'all'}
+        listTables={ep.listTables}
+        statusFilter={tableFilter}
+        userName={user.display_name}
+        onSwitchUser={logout}
+        onHome={goHome}
+        onBack={goHome}
+        onTakeaway={() => open('takeaway')}
+        onOpenTable={(tb) => {
+          // Food selection / order view replace these placeholders in their own work.
+          setSelectedTable(tb);
+          open(tb.status === 'AVAILABLE' ? 'chooseFood' : 'order');
         }}
       />
     );
@@ -151,7 +204,9 @@ export function App({ fetchImpl }: { fetchImpl?: typeof fetch } = {}) {
 
   return (
     <I18nProvider lang={lang}>
-      <ConnectionProvider check={healthCheck}>{body}</ConnectionProvider>
+      <ConnectionProvider check={healthCheck}>
+        <RealtimeProvider channel={session ? channel : null}>{body}</RealtimeProvider>
+      </ConnectionProvider>
     </I18nProvider>
   );
 }

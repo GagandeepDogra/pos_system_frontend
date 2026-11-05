@@ -130,6 +130,23 @@
   "money": {
     "rupees": "₹{amount}"
   },
+  "tiles": {
+    "rightNow": "अभी",
+    "todaysSales": "आज की बिक्री",
+    "activeTables": "चालू टेबल",
+    "pendingKots": "रसोई में बाकी",
+    "readyOrders": "परोसने को तैयार",
+    "openTakeaways": "बाकी पार्सल"
+  },
+  "tables": {
+    "title": "टेबल",
+    "intro": "ऑर्डर लेने या देखने के लिए टेबल छुएँ।",
+    "areas": "जगह",
+    "all": "सभी",
+    "toTakeaway": "{label} →",
+    "empty": "यहाँ कोई टेबल नहीं।",
+    "loadFailed": "टेबल नहीं खुलीं। वाई-फ़ाई देखें।"
+  },
   "kitchen": {
     "tickets": "{count} पर्चियाँ"
   },

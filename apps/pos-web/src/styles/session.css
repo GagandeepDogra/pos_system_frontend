@@ -57,6 +57,32 @@
 }
 .quick-action:active { transform: scale(0.97); }
 .quick-action__label { font-size: var(--text-title); line-height: var(--text-title-lh); font-weight: 600; overflow-wrap: anywhere; }
+/*
+ * A primary button must be at least 45% of a 360 px screen (162 px): with 12 px side
+ * padding and the 12 px gap each of the two columns is (360 - 24 - 12) / 2 = 162 px.
+ */
+.dashboard .workspace { padding-left: var(--space-3); padding-right: var(--space-3); }
+
+/* "Right now" live tiles (REQ-029). */
+.live-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); width: 100%; align-items: start; }
+@media (min-width: 768px) { .live-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.live-tile {
+  min-height: 113px; padding: var(--space-4);
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font: inherit; color: var(--color-text); text-align: left; cursor: pointer;
+  transition: transform var(--motion-press) ease-out;
+}
+.live-tile:active { transform: scale(0.97); }
+.live-tile__value { font-size: var(--text-figure); line-height: 43px; font-weight: 700; overflow-wrap: anywhere; }
+.live-tile__label { color: var(--color-text-muted); overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .live-tile { transition: none; } }
+
+/* Tables screen (Tables · Phone). */
+.area-tabs { width: 100%; }
+.area-tabs .btn { min-width: 0; padding-left: var(--space-1); padding-right: var(--space-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tables__message { margin: 0; color: var(--color-text-muted); }
+.tables__takeaway { min-height: var(--bottom-action); }
 .admin-entry { min-height: var(--target-min); }
 .bottom-actions { padding: var(--space-4); background: var(--color-surface); display: flex; flex-direction: column; gap: var(--space-3); }
 .section-title { margin: 0; font-size: var(--text-title); line-height: var(--text-title-lh); font-weight: 600; }
