@@ -1,0 +1,62 @@
+{
+  "app": {
+    "name": "Dhaba POS",
+    "loading": "Opening…"
+  },
+  "login": {
+    "title": "Who is working?",
+    "subtitle": "Tap your name, then enter your PIN"
+  },
+  "dashboard": {
+    "dineIn": "Dine-in",
+    "takeaway": "Takeaway",
+    "kitchen": "Kitchen",
+    "payment": "Payment"
+  },
+  "actions": {
+    "sendToKitchen": "Send to Kitchen",
+    "bill": "Bill",
+    "cancelItem": "Cancel item",
+    "pay": "Pay",
+    "close": "Close",
+    "tryAgain": "Try again"
+  },
+  "status": {
+    "working": "Please wait",
+    "checking": "Checking...",
+    "saved": "Saved",
+    "notSaved": "Not saved, try again"
+  },
+  "keypad": {
+    "title": "Enter amount",
+    "clear": "Clear",
+    "backspace": "Remove last digit",
+    "done": "Done"
+  },
+  "payment": {
+    "cashTendered": "Cash received"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "hi": "हिन्दी"
+  },
+  "errors": {
+    "BAD_REQUEST": "Something is missing or wrong. Check the details and try again.",
+    "UNAUTHORIZED": "You are logged out. Please log in again.",
+    "FORBIDDEN": "You are not allowed to do this. Ask the owner.",
+    "NOT_FOUND": "This was not found. Go back and open it again.",
+    "CONFLICT": "Someone else changed this. The screen is updated, please check and try again.",
+    "TABLE_BUSY": "This table is already in use. Open its order instead.",
+    "ITEM_UNAVAILABLE": "Some food is finished. Remove it and send again.",
+    "OVERPAYMENT": "Amount is more than the bill. Enter a smaller amount.",
+    "LOCKED": "Too many wrong PINs. Wait 5 minutes and try again.",
+    "TOO_MANY_REQUESTS": "Too many tries. Wait a minute and try again.",
+    "PRECONDITION_REQUIRED": "The screen is old. Go back and open it again.",
+    "UNPROCESSABLE": "This cannot be done right now. Check and try again.",
+    "SERVER_ERROR": "Not saved, try again. If it repeats, call the owner.",
+    "UNAVAILABLE": "The counter computer is starting. Wait a moment and try again.",
+    "NETWORK": "No connection to the counter computer. Check the Wi-Fi and try again.",
+    "TIMEOUT": "Not saved, try again"
+  }
+}
