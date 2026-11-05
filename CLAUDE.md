@@ -47,7 +47,7 @@
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
 - `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
   'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
-  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood', 'order' and 'kitchen' are real). `open(screen, tableFilter?)`
+  swap the branch in App for the real screen; 'dashboard', 'tables', 'chooseFood', 'order', 'kitchen', 'bills' and 'payment' are real). `open(screen, tableFilter?)`
   checks `canOpen(deviceLock, screen)`. Every API
   401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
 - `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
@@ -112,6 +112,17 @@
   then `window.print()`; `@media print` in `styles/order.css` shows only `.bill-card` (the receipt page belongs to
   the payment work). ADD MORE FOOD -> App sets a non-free table `FoodTarget` with the order id, opens 'chooseFood'.
   `#/design/order` previews it.
+- `screens/PaymentScreen.tsx` + `payment/paymentModel.ts` — `BillsScreen` (screen 'bills': GET /bills/open via
+  `openBills`, rows by table/token with amount due + Ready to Close badge; tap -> App `setBillOrderId`, 'payment') and
+  `PaymentScreen` (screen 'payment'): server bill first, then Cash/UPI/Card. Cash card: quick amounts (`quickCash`,
+  Exact), `changeDue`; 'Pay part only' keypad for splits (empty = full balance). UPI opens a sheet with
+  `public/upi-qr.svg` (placeholder, owner replaces) + Received (no UTR needed); closing it records nothing.
+  `paymentBody` never overpays; one Idempotency-Key per tap, kept on timeout/5xx. At zero balance -> full-screen
+  green PAID (Print / Share / Done). Void / close-with-balance (`closeExceptionBody`, CLOSE_REASON_CODES chips) ask
+  the Admin PIN up front for non-Admins. Print: recordReceiptPrint (or printBill) then `tryPrint` — a throw shows a
+  printer error, never undoes a payment. `.receipt` (styles/payment.css) is print-only at 48 mm with
+  `overflow-wrap:anywhere` (58 and 80 mm rolls). `maybePrintKot` (KitchenScreen `printKot` prop) prints a new KOT
+  only when settings.kitchen_print_enabled. `#/design/payment`, `#/design/bills` preview them.
 - `kitchen/KitchenNotices.tsx` — chips on non-kitchen sessions (rendered by App) for `kot.status_changed` -> READY and
   `menu.availability_changed` -> unavailable. Alert only; screens still refetch.
 - `styles/kitchen.css` — `.kot-card*`, `.kot-line--cancelled`, `.kitchen-note`, `.kitchen-notice*` (no animation).

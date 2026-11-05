@@ -19,6 +19,7 @@ import { ScreenPreview } from './screens/ScreenPreview';
 import { ChooseFoodScreen, type FoodTarget } from './screens/ChooseFoodScreen';
 import { KitchenScreen } from './screens/KitchenScreen';
 import { OrderScreen } from './screens/OrderScreen';
+import { BillsScreen, PaymentScreen } from './screens/PaymentScreen';
 import { KitchenNotices } from './kitchen/KitchenNotices';
 import { defaultCartStore, type CartStore } from './cart/cartStore';
 import type { TableCardData } from './components/TableGrid';
@@ -62,6 +63,8 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
   const [selectedTable, setSelectedTable] = useState<TableCardData | null>(null);
   /** Whose order food selection adds to; set by the tables grid (and later the takeaway screen). */
   const [foodTarget, setFoodTarget] = useState<FoodTarget | null>(null);
+  /** The open bill the payment screen settles. */
+  const [billOrderId, setBillOrderId] = useState<string | null>(null);
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const token = session?.token;
   useEffect(() => {
@@ -235,6 +238,16 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppPr
           open('chooseFood');
         }}
       />
+    );
+  } else if (screen === 'bills' && user.role !== 'KITCHEN' && canOpen(lock, 'bills')) {
+    body = (
+      <BillsScreen api={ep} userName={user.display_name} onSwitchUser={logout} onHome={goHome} onBack={goHome}
+        onOpenBill={(o) => { setBillOrderId(o.id); open('payment'); }} />
+    );
+  } else if (screen === 'payment' && billOrderId && canOpen(lock, 'payment')) {
+    body = (
+      <PaymentScreen key={billOrderId} orderId={billOrderId} api={ep} role={user.role} userName={user.display_name}
+        onSwitchUser={logout} onHome={goHome} onBack={() => open('bills')} onDone={() => open('bills')} />
     );
   } else if (screen === 'kitchen' && canOpen(lock, 'kitchen')) {
     body = (

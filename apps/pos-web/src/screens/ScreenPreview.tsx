@@ -4,8 +4,9 @@ import { DashboardScreen } from './DashboardScreen';
 import { TablesScreen } from './TablesScreen';
 import { ChooseFoodScreen } from './ChooseFoodScreen';
 import { KitchenScreen } from './KitchenScreen';
-import type { KitchenKotView, Kot, OrderDetailView, OrderItemStatus, Setting } from '@dhaba/shared';
+import type { KitchenKotView, Kot, Order, OrderDetailView, Payment, OrderItemStatus, Setting } from '@dhaba/shared';
 import { OrderScreen } from './OrderScreen';
+import { BillsScreen, PaymentScreen } from './PaymentScreen';
 import { memoryCartStore } from '../cart/cartStore';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
@@ -90,7 +91,15 @@ export function ScreenPreview({ name }: { name: string }) {
         }} />
     );
   }
-  if (name === 'order') {
+  if (name === 'bills') {
+    const b = (id: string, table: string | null, token: string | null, status: string, due: string) =>
+      ({ id, table_label_snapshot: table, token, status, balance_due: due, created_at: id } as unknown as Order);
+    return (
+      <BillsScreen userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop} onBack={noop} onOpenBill={noop}
+        api={{ listOpenBills: () => ok([b('1', '5', null, 'BILLED', '300.00'), b('2', '2', null, 'OPEN', '540.00'), b('3', null, 'T-012', 'OPEN', '180.00')]) }} />
+    );
+  }
+  if (name === 'order' || name === 'payment') {
     const base = { order_id: 'ord_5', food_type_snapshot: 'VEG' as const, created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
     const li = (id: string, kot_id: string, n: string, v: string, price: number, quantity: number, status: OrderItemStatus = 'ACTIVE') => ({
       ...base, id, kot_id, variant_id: id, item_name_snapshot: n, item_name_hi_snapshot: n, variant_name_snapshot: v,
@@ -106,6 +115,15 @@ export function ScreenPreview({ name }: { name: string }) {
         li('d', 'k14', 'Tandoori Roti', 'Butter', 20, 6), li('e', 'k14', 'Lassi', 'Salted', 50, 2), li('f', 'k14', 'Masala Chai', 'Cup', 20, 6)],
     } as unknown as OrderDetailView;
     const never = () => new Promise<never>(noop);
+    if (name === 'payment') {
+      const upi = { ...base, id: 'p1', business_date: '2026-11-05', method: 'UPI', amount: '500.00', status: 'SUCCESS', idempotency_key: 'p1' } as Payment;
+      const billed = { ...order, items: order.items?.filter((l) => l.id !== 'c'), table_label_snapshot: '5', status: 'BILLED', bill_no: 'B-20261105-006', paid_amount: '500.00', balance_due: '300.00', payments: [upi] } as OrderDetailView;
+      return (
+        <PaymentScreen orderId="ord_5" role="CASHIER" userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop} onBack={noop} onDone={noop}
+          api={{ getOrder: () => ok(billed), getSettings: () => ok({ dhaba_name: 'Dhaba', gst_rate_percent: null } as Setting), listOpenBills: () => ok([]),
+            printBill: never, recordPayment: never, voidPayment: never, closeWithException: never, recordReceiptPrint: never, createApproval: never }} />
+      );
+    }
     return (
       <OrderScreen orderId="ord_5" table="5" tableId="din_05" role="CASHIER" userName={RAMESH.display_name} onSwitchUser={noop} onHome={noop}
         onBack={noop} onAddFood={noop}

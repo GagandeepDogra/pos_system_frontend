@@ -35,6 +35,13 @@ What is in place today:
   round off and grand total, all as computed by the server. PRINT BILL gives the bill its number and turns the
   table orange (Ready to close); Discount (₹ or %, with a reason; the owner's PIN above the limit in settings),
   Move table (free tables only) and Join table (merge another table's order into this bill) sit below it.
+- the Payment screen: every open bill by table or token with the amount due and a Ready to close badge. Tapping
+  one shows the bill, then Cash, UPI and Card. Cash shows cash given and change (quick ₹100/₹200/₹500/₹2000 and
+  Exact); UPI shows the dhaba's QR (replace `apps/pos-web/public/upi-qr.svg` with your own) and a Received
+  button. A bill can be split across methods; at zero balance a green PAID screen offers Print, Share
+  (WhatsApp text) and Done. The owner (or a cashier with the owner's PIN) can void a payment or close a bill
+  with a balance, with a reason. Receipts print through the browser to an 80 mm or 58 mm thermal printer;
+  a printer problem never undoes a payment. Kitchen KOTs are printed only if kitchen printing is switched on.
 - the Kitchen board (built for a tablet in landscape): New, Preparing and Ready columns side by side, oldest
   ticket first. Each card shows the table or token, KOT number, time sent and minutes waiting, every item with
   its size and quantity, and kitchen notes in a red box; items cancelled after sending are struck through.
@@ -65,7 +72,8 @@ TypeScript, React 19, Vite 6, Vitest, ESLint. npm workspaces: `apps/pos-web` (th
   `/api` and the live-update channel (`/socket.io`, Socket.IO) to `POS_API_URL` (default
   `http://localhost:3000`). The app shell runs without it. Without a backend, sample screens can be viewed in
   development at `http://localhost:5173/#/design/dashboard`, `http://localhost:5173/#/design/tables` and
-  `http://localhost:5173/#/design/kitchen` (`#/design/kitchen-dark` for the dark kitchen screen).
+  `http://localhost:5173/#/design/kitchen` (`#/design/kitchen-dark` for the dark kitchen screen),
+  `#/design/bills` and `#/design/payment`.
 
 Configuration (optional, see `.env.example`):
 

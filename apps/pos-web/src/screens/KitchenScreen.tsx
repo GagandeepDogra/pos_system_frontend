@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Item, KitchenKotView, Kot, KotStatus, MenuItemView, MenuView, RealtimeEvent, Role, Setting } from '@dhaba/shared';
+import { maybePrintKot } from '../payment/paymentModel';
 import { useI18n } from '../i18n/I18nProvider';
 import type { ApiResult } from '../api/client';
 import { ScreenFrame } from '../components/ScreenFrame';
@@ -42,10 +43,12 @@ interface Props {
   onBack?: () => void;
   /** The new-KOT alert (tests pass a spy). */
   playSound?: () => void;
+  /** Optional kitchen printer (REQ-057), used only when settings.kitchen_print_enabled; tests pass a fake. */
+  printKot?: () => void;
 }
 
 /** Kitchen · Tablet: NEW / PREPARING / READY board, oldest first, no prices (REQ-051 – REQ-056, REQ-021). */
-export function KitchenScreen({ api, userName, role, deviceRole, onSwitchUser, onHome, onBack, playSound = playKotAlert }: Props) {
+export function KitchenScreen({ api, userName, role, deviceRole, onSwitchUser, onHome, onBack, playSound = playKotAlert, printKot = () => window.print() }: Props) {
   const { t, lang } = useI18n();
   const { data, failed, refresh } = useLiveData(api.listKitchenKots, KITCHEN_EVENTS);
   const [now, setNow] = useState(() => Date.now());
@@ -58,10 +61,14 @@ export function KitchenScreen({ api, userName, role, deviceRole, onSwitchUser, o
   const seen = useRef<Set<string> | null>(null);
   const sound = useRef(playSound);
   sound.current = playSound;
+  const kotPrinter = useRef(printKot);
+  kotPrinter.current = printKot;
+  const kitchenPrint = useRef<Pick<Setting, 'kitchen_print_enabled'> | null>(null);
 
   useEffect(() => {
     let live = true;
     void api.getSettings().then((res) => {
+      if (live && res.ok && res.data) kitchenPrint.current = { kitchen_print_enabled: res.data.kitchen_print_enabled === true };
       if (live && res.ok && typeof res.data?.late_kot_minutes === 'number') setLateLimit(res.data.late_kot_minutes);
     });
     return () => { live = false; };
@@ -85,6 +92,8 @@ export function KitchenScreen({ api, userName, role, deviceRole, onSwitchUser, o
       if (arrived.length > 0) {
         setFresh((prev) => new Set([...prev, ...arrived]));
         sound.current();
+        // Off by default: the on-screen card is the KOT. A printer failure never blocks or hides it.
+        maybePrintKot(kitchenPrint.current, kotPrinter.current);
       }
     }
     seen.current = ids;
