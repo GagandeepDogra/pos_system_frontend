@@ -10,6 +10,9 @@ export interface TableCardData {
   /** Running bill, already formatted by the server's decimal (e.g. '460'). */
   amount?: string | null;
   minutesOpen?: number | null;
+  /** The open order on this table, if any (food selection sends to it). */
+  orderId?: string | null;
+  area?: string | null;
 }
 
 /** One table: 40 px bold number, status icon + word, seats or running amount (REQ-085, REQ-086). */

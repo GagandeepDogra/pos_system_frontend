@@ -18,6 +18,16 @@ What is in place today:
   Occupied, orange Ready to close); occupied tables show the running bill and minutes open. Large area tabs
   (All plus each area, e.g. Hall, Family, Outside) filter the grid; tables with no area are listed under All.
   The grid updates live on every phone, and catches up after a lost connection;
+- food selection (tap an Available table): the table pill stays in the header; category buttons, a
+  All / Veg / Non-veg filter with the green and red dot marks, and search from 2 letters (English, Hindi or
+  short code). Cards show both names, an optional photo and the starting price. One-size items are added in one
+  tap; items with sizes (Half / Full) open a size sheet. Finished items are greyed "Khatam / Not available";
+- the cart bar (item count and total) opens a summary with large − / + buttons and a kitchen note per line
+  (Less spicy, Extra spicy, No onion, Parcel, plus free text, up to 80 letters). The cart is kept on the phone,
+  so it survives a reload or a lost connection. Send to Kitchen makes one kitchen ticket of the new lines only
+  and shows its number in green; sent lines are listed in grey under "Sent to kitchen". A slow or lost answer
+  is retried safely, so a ticket is never made twice; if some food has just finished, only those lines are
+  dropped and the rest stay in the cart;
 - for the owner an ADMIN button that
   asks for the owner's PIN first. In the admin area a device can be locked to a role, e.g. the kitchen tablet
   then always opens straight to the Kitchen screen;

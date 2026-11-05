@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/shell.css';
 import './styles/primitives.css';
 import './styles/session.css';
+import './styles/food.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

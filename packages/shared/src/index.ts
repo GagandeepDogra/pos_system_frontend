@@ -258,6 +258,17 @@ export interface TableView extends DiningTable {
   minutes_open?: number | null;
 }
 
+/** One menu item as GET /menu returns it: the Item with its variants (prices omitted for Kitchen). */
+export interface MenuItemView extends Item {
+  variants?: Variant[];
+}
+
+/** GET /menu body: active categories and items (a bare item array is also accepted by pos-web). */
+export interface MenuView {
+  categories?: Category[];
+  items: MenuItemView[];
+}
+
 /** Available = no OPEN/BILLED order; Occupied = OPEN; Ready to Close = BILLED (REQ-033). */
 export function deriveTableStatus(orderStatus: OrderStatus | null | undefined): TableStatus {
   if (orderStatus === 'OPEN') return 'OCCUPIED';

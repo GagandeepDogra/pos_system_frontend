@@ -80,6 +80,21 @@
   takes `realtime` (factory) — null under unit tests by default. Event names: `REALTIME_EVENTS` in shared.
 - `screens/ScreenPreview.tsx` — dev-only real screens with sample data at `#/design/dashboard`,
   `#/design/dashboard-admin`, `#/design/dashboard-kitchen`, `#/design/tables`.
+- `screens/ChooseFoodScreen.tsx` — food selection + cart + Send (screen 'chooseFood'). Takes a `FoodTarget`
+  (`{kind:'table', tableId, table, detail, orderId, free}` from the tables grid, or `{kind:'token', token, orderId}` —
+  the takeaway screen sets this via App's `setFoodTarget` and `open('chooseFood')`), a `FoodApi` (getMenu,
+  openTableSession, sendToKitchen) and a `CartStore`. A dine-in session is opened lazily on the first Send
+  (409 TABLE_BUSY → uses the returned order). Variant sheet, note sheet (chips stored in English so the kitchen
+  shows 'No onion'), expandable cart summary inside the pinned action area, 'Sent to kitchen' list (local).
+  `#/design/choose-food` previews it.
+- `cart/menuModel.ts` (GET /menu normalised: `MenuView {categories, items[].variants}` in shared, or a bare item array;
+  `startingPrice`, `canOrder`, `visibleItems`, search from 2 letters), `cart/cartModel.ts` (pure cart ops: max 99,
+  − on 1 removes, note ≤ 80, `sendBody`, `markSent`, `rejectedVariantIds` for 422 ITEM_UNAVAILABLE details,
+  `reconcile` a stored cart with the table's current order). Any cart edit clears `sendKey`; a timeout keeps it
+  (retry with same key); a 4xx clears it.
+- `cart/cartStore.ts` — `CartStore` (IndexedDB `dhaba-pos`/`carts`, localStorage fallback, `memoryCartStore` for
+  tests); key `table:<id>` or `order:<id>`. App takes an optional `cartStore` prop.
+- `styles/food.css` — food screen classes (`.food-card`, `.food-tabs`, `.cart-*`, `.note-label` boxed red note).
 - `styles/session.css` — classes for the above. Icons in `public/icons/` (from the design assets).
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
   caches `/api/`), `register.ts` (prod only). Manifest/icon in `public/`.

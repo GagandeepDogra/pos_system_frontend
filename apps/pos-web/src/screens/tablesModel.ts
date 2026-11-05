@@ -30,6 +30,8 @@ export function toCard(t: TableView, now: number): TableCardData {
     seats: t.seats ?? null,
     amount: free ? null : t.running_amount ?? null,
     minutesOpen: free ? null : minutesOpen(t, now),
+    orderId: t.order_id ?? null,
+    area: t.area ?? null,
   };
 }
 

@@ -16,6 +16,8 @@ import { PlaceholderScreen } from './screens/PlaceholderScreen';
 import { DesignPreview } from './screens/DesignPreview';
 import { TablesScreen } from './screens/TablesScreen';
 import { ScreenPreview } from './screens/ScreenPreview';
+import { ChooseFoodScreen, type FoodTarget } from './screens/ChooseFoodScreen';
+import { defaultCartStore, type CartStore } from './cart/cartStore';
 import type { TableCardData } from './components/TableGrid';
 import { createSocketChannel, RealtimeProvider, type RealtimeChannel, type RealtimeFactory } from './realtime/realtime';
 
@@ -40,9 +42,12 @@ interface AppProps {
   fetchImpl?: typeof fetch;
   /** Builds the realtime channel for a session token (tests pass a memory channel). */
   realtime?: RealtimeFactory | null;
+  /** Where the unsent cart is kept on this device (tests pass a memory store). */
+  cartStore?: CartStore;
 }
 
-export function App({ fetchImpl, realtime = DEFAULT_REALTIME }: AppProps = {}) {
+export function App({ fetchImpl, realtime = DEFAULT_REALTIME, cartStore }: AppProps = {}) {
+  const store = useMemo(() => cartStore ?? defaultCartStore(), [cartStore]);
   const [session, setSession] = useState<Session | null>(startSession);
   const sessionRef = useRef(session);
   sessionRef.current = session;
@@ -52,6 +57,8 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME }: AppProps = {}) {
   const [tableFilter, setTableFilter] = useState<TableStatus | null>(null);
   /** The table the user tapped; the order/food screens start from it. */
   const [, setSelectedTable] = useState<TableCardData | null>(null);
+  /** Whose order food selection adds to; set by the tables grid (and later the takeaway screen). */
+  const [foodTarget, setFoodTarget] = useState<FoodTarget | null>(null);
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const token = session?.token;
   useEffect(() => {
@@ -183,10 +190,26 @@ export function App({ fetchImpl, realtime = DEFAULT_REALTIME }: AppProps = {}) {
         onBack={goHome}
         onTakeaway={() => open('takeaway')}
         onOpenTable={(tb) => {
-          // Food selection / order view replace these placeholders in their own work.
+          // The order view (occupied tables) replaces its placeholder in its own work.
           setSelectedTable(tb);
+          setFoodTarget({
+            kind: 'table', tableId: tb.id, table: tb.number, detail: tb.area ?? undefined,
+            orderId: tb.orderId ?? null, free: tb.status === 'AVAILABLE',
+          });
           open(tb.status === 'AVAILABLE' ? 'chooseFood' : 'order');
         }}
+      />
+    );
+  } else if (screen === 'chooseFood' && foodTarget && canOpen(lock, 'chooseFood')) {
+    body = (
+      <ChooseFoodScreen
+        target={foodTarget}
+        api={ep}
+        store={store}
+        userName={user.display_name}
+        onSwitchUser={logout}
+        onHome={goHome}
+        onBack={() => open(foodTarget.kind === 'table' ? 'tables' : 'takeaway')}
       />
     );
   } else {

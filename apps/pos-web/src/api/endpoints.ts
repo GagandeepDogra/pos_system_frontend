@@ -1,5 +1,5 @@
 import type {
-  Category, DashboardTiles, DiningTable, TableView, Item, Kot, Language, Order, OrderException, OrderItem, Payment, PriceChange, Setting, User, Variant,
+  Category, DashboardTiles, DiningTable, TableView, Item, Kot, Language, MenuItemView, MenuView, Order, OrderException, OrderItem, Payment, PriceChange, Setting, User, Variant,
 } from '@dhaba/shared';
 import type { ApiClient, RequestOptions } from './client';
 
@@ -31,7 +31,7 @@ export function endpoints(api: ApiClient) {
     getOrder: (id: string) => r<Order>(`/orders/${encodeURIComponent(id)}`),
     sendToKitchen: (orderId: string, key: string, body: { lines: Pick<OrderItem, 'variant_id' | 'quantity' | 'note'>[] }, x?: Extra) =>
       r<Kot>(`/orders/${encodeURIComponent(orderId)}/kots`, { method: 'POST', idempotencyKey: key, body, ...x }),
-    getMenu: (q?: string) => r<Item[]>('/menu', { query: { q } }),
+    getMenu: (q?: string) => r<MenuView | MenuItemView[]>('/menu', { query: { q } }),
     listKitchenKots: () => r<Kot[]>('/kitchen/kots'),
     updateKotStatus: (id: string, rowVersion: number, status: Kot['status'], x?: Extra) =>
       r<Kot>(`/kots/${encodeURIComponent(id)}/status`, { method: 'PATCH', ifMatch: rowVersion, body: { status }, ...x }),

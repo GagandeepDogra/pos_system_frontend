@@ -1,0 +1,79 @@
+/* Choose food · Phone: search, category / diet tabs, item cards, cart summary, sheets (REQ-042..REQ-048). */
+.food-search {
+  min-height: var(--target-min); width: 100%; padding: var(--space-3); font: inherit; font-weight: 600; text-align: center;
+  color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+}
+.food-tabs { display: flex; gap: var(--gap-tap); overflow-x: auto; max-width: 100%; }
+.food-tabs .btn { flex: 1 0 100px; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); white-space: nowrap; }
+.food-tabs .btn[aria-pressed='true'] { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+.diet-dot { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border: 2px solid currentColor; border-radius: 2px; flex: none; }
+.diet-dot::after { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.diet-dot--veg { color: var(--color-success); }
+.diet-dot--non-veg { color: var(--color-danger); }
+/* Diet row: three equal buttons that always fit at 360 px. */
+.food-tabs--diet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; }
+.food-tabs--diet .btn { gap: var(--space-1); padding-left: var(--space-1); padding-right: var(--space-1); }
+.food-tabs--diet .diet-dot { width: 12px; height: 12px; }
+.food-tabs--diet .diet-dot::after { width: 4px; height: 4px; }
+.food-tabs .btn[aria-pressed='true'] .diet-dot { color: var(--color-on-primary); }
+.food-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); align-items: start; }
+@media (min-width: 768px) { .food-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .food-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.food-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); min-width: 0;
+}
+.food-card__photo { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-sm); }
+.food-card__diet { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 500; }
+.food-card__diet--veg { color: var(--color-success); }
+.food-card__diet--non-veg { color: var(--color-danger); }
+.food-card__name { font-size: var(--text-item); line-height: var(--text-item-lh); font-weight: 600; overflow-wrap: anywhere; }
+.food-card__sub { color: var(--color-text-muted); overflow-wrap: anywhere; }
+.food-card__add { width: 100%; }
+.food-card--off { background: var(--color-surface-muted); }
+.food-card--off .food-card__name, .food-card--off .text-price, .food-card--off .food-card__diet { color: var(--color-text-muted); }
+.food-card__off { font-weight: 600; color: var(--color-text-muted); }
+
+.cart-bar { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.pinned-action .cart-bar__toggle {
+  width: auto; min-width: 0; min-height: var(--target-min); padding: 0 var(--space-2);
+  border: none; background: none; font-weight: 600;
+}
+.cart-summary { max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); }
+.cart-summary__empty { margin: 0; color: var(--color-text-muted); }
+.cart-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.cart-line {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--space-2);
+  padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border);
+}
+.cart-line__text { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.cart-line__meta { color: var(--color-text-muted); }
+.cart-line__total { font-weight: 700; }
+.cart-line__actions { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--gap-tap); }
+.pinned-action .qty-btn { width: var(--target-min); min-width: var(--target-min); min-height: var(--target-min); padding: 0; font-size: var(--text-price); font-weight: 700; }
+.pinned-action .cart-line__note { width: auto; min-width: 0; min-height: var(--target-min); margin-left: auto; }
+.qty { min-width: 2ch; text-align: center; font-size: var(--text-title); font-weight: 700; }
+/* Boxed red note label, the same look the kitchen card uses. */
+.note-label {
+  align-self: flex-start; padding: var(--space-1) var(--space-2); border: 2px solid var(--color-danger);
+  border-radius: var(--radius-sm); color: var(--color-danger); font-weight: 700;
+}
+.cart-sent__title { margin: 0; font-size: var(--text-body); color: var(--color-text-muted); }
+.cart-line--sent { color: var(--color-text-muted); background: var(--color-surface-muted); padding: var(--space-2); border-radius: var(--radius-sm); border: none; }
+
+.variant-list { display: flex; flex-direction: column; gap: var(--gap-tap); }
+.variant-btn { display: flex; justify-content: space-between; align-items: center; min-height: var(--bottom-action); }
+.note-chips { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-tap); }
+.note-chips .btn[aria-pressed='true'] { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+.note-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.note-field input {
+  min-height: var(--target-min); padding: var(--space-3); font: inherit; color: var(--color-text);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md);
+}
+.note-field input[aria-invalid='true'] { border-color: var(--color-danger); }
+.field-error { margin: 0; color: var(--color-danger); font-weight: 600; }
+
+/* Send results show above the cart bar, so the header pill is never covered (REQ-093). */
+.pinned-action .result-bar { position: static; margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) 0; align-items: center; }
+.pinned-action .result-bar__close { width: auto; min-width: 0; margin-left: auto; flex: none; }
+.cart-summary { border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-3); }
