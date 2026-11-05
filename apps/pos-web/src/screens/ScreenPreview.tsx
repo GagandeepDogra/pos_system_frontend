@@ -9,8 +9,7 @@ import { OrderScreen } from './OrderScreen';
 import { BillsScreen, PaymentScreen } from './PaymentScreen';
 import { TakeawayScreen } from './TakeawayScreen';
 import { memoryCartStore } from '../cart/cartStore';
-import { AdminAreaScreen } from './AdminAreaScreen';
-import type { AdminMenuApi } from './AdminMenuScreen';
+import { ADMIN_SECTIONS, AdminAreaScreen, type AdminSection } from './AdminAreaScreen';
 
 const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
 const variant = (id: string, name: string, price: string, sort_order = 1) => ({ id, item_id: '', name, price, sort_order, is_active: true, ...audit });
@@ -77,7 +76,7 @@ const noop = () => undefined;
  * real screens with sample data, for screenshots before pos-api exists.
  */
 export function ScreenPreview({ name }: { name: string }) {
-  if (name === 'admin-menu') {
+  if (name.startsWith('admin-')) {
     const audit = { created_at: '', created_by: '', updated_at: '', updated_by: '', row_version: 1 };
     const cat = (id: string, en: string, hi: string, s: number) => ({ id, name_en: en, name_hi: hi, sort_order: s, is_active: true, ...audit });
     const v = (id: string, itemId: string, n: string, price: string, s: number) => ({ id, item_id: itemId, name: n, price, sort_order: s, is_active: true, ...audit });
@@ -94,8 +93,28 @@ export function ScreenPreview({ name }: { name: string }) {
     const api = {
       getMenu: () => ok(menu), createCategory: echo, updateCategory: echo, createItem: echo, updateItem: echo,
       createVariant: echo, updateVariant: echo, changeVariantPrice: echo, setItemAvailability: echo,
-    } as unknown as AdminMenuApi;
-    return <AdminAreaScreen api={api} userName="Gagandeep" deviceLock={null} onDeviceLock={() => {}} onHome={() => {}} onSwitchUser={() => {}} />;
+      listTables: () => ok([
+        { id: 't1', table_number: '1', area: 'Hall', seats: 4, is_active: true, status: 'AVAILABLE', ...audit },
+        { id: 't2', table_number: '2', area: 'Hall', seats: 4, is_active: true, status: 'OCCUPIED', order_id: 'o1', ...audit },
+        { id: 't3', table_number: 'G1', area: 'Garden', seats: 6, is_active: true, status: 'AVAILABLE', ...audit },
+        { id: 't4', table_number: '9', area: null, seats: null, is_active: true, status: 'AVAILABLE', ...audit },
+      ]),
+      createTable: echo, updateTable: echo, createUser: echo, updateUser: echo, resetUserPin: echo, updateSettings: echo,
+      listLoginStaff: () => ok([
+        { id: 'u1', display_name: 'Gagandeep', role: 'ADMIN', language: 'hi', is_active: true, failed_pin_count: 0, locked_until: null, token_version: 1, ...audit },
+        { id: 'u2', display_name: 'Ravi', role: 'CASHIER', language: 'hi', is_active: true, failed_pin_count: 5,
+          locked_until: new Date(Date.now() + 4 * 60000).toISOString(), token_version: 1, ...audit },
+        { id: 'u3', display_name: 'Sunita', role: 'KITCHEN', language: 'hi', is_active: true, failed_pin_count: 0, locked_until: null, token_version: 1, ...audit },
+      ]),
+      getSettings: () => ok({
+        id: 's1', dhaba_name: 'Sher-e-Punjab Dhaba', address: 'NH 44, Murthal', phone: '9876543210', gst_number: null, gst_rate_percent: null,
+        receipt_footer: 'Thank you! Come again.', token_reset_time: '04:00', shift_end_time: null, late_kot_minutes: 15,
+        discount_limit_amount: '100.00', kitchen_print_enabled: false, ...audit,
+      }),
+    } as unknown as Parameters<typeof AdminAreaScreen>[0]['api'];
+    const section = name.slice('admin-'.length);
+    const initial = (ADMIN_SECTIONS as readonly string[]).includes(section) ? section as AdminSection : 'menu';
+    return <AdminAreaScreen initialSection={initial} api={api} userName="Gagandeep" deviceLock={null} onDeviceLock={() => {}} onHome={() => {}} onSwitchUser={() => {}} />;
   }
   if (name === 'tables') {
     return (

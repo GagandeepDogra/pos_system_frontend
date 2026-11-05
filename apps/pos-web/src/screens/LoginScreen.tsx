@@ -62,6 +62,9 @@ export function LoginScreen({ api, kitchenDevice, onLanguage, onLoggedIn }: Prop
     if (res.status === 401) {
       const left = remainingTries(res.error.details);
       setMessage(left === null ? t('login.wrongPin') : t('login.wrongPinTries', { count: left }));
+    } else if (res.status === 423) {
+      // Locked after 5 wrong PINs, even with the right one (REQ-025); an Admin can unlock early.
+      setMessage(t('login.locked'));
     } else setMessage(t(`errors.${res.error.code}`));
   };
 

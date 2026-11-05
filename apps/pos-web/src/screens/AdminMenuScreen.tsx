@@ -50,7 +50,7 @@ function useAdminMenu(api: AdminMenuApi) {
 
 type Notify = (m: ResultMessage) => void;
 
-function useFailText() {
+export function useFailText() {
   const { t, lang } = useI18n();
   return useCallback(
     (res: ApiResult<unknown>) => {
@@ -63,7 +63,7 @@ function useFailText() {
 }
 
 /** A bottom sheet with a title, fields, and NO (left) / Save (right). */
-function EditSheet({ title, error, saveLabel, pending, canSave = true, onSave, onClose, children }: {
+export function EditSheet({ title, error, saveLabel, pending, canSave = true, onSave, onClose, children }: {
   title: string; error: string | null; saveLabel: string; pending: boolean; canSave?: boolean;
   onSave: () => void; onClose: () => void; children: ReactNode;
 }) {
@@ -85,7 +85,7 @@ function EditSheet({ title, error, saveLabel, pending, canSave = true, onSave, o
   );
 }
 
-function TextField({ label, value, onChange, maxLength, invalid }: {
+export function TextField({ label, value, onChange, maxLength, invalid }: {
   label: string; value: string; onChange: (v: string) => void; maxLength?: number; invalid?: boolean;
 }) {
   const id = useId();
@@ -98,7 +98,7 @@ function TextField({ label, value, onChange, maxLength, invalid }: {
   );
 }
 
-function StatusWord({ active }: { active: boolean }) {
+export function StatusWord({ active }: { active: boolean }) {
   const { t } = useI18n();
   return (
     <span className={`admin-status admin-status--${active ? 'on' : 'off'}`}>

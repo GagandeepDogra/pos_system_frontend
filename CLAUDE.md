@@ -55,8 +55,8 @@
 - `session/deviceLock.ts` — device role lock (`dhaba.deviceRole`), `canOpen`, `homeScreen` (KITCHEN → 'kitchen').
   Set from the admin area (`screens/AdminAreaScreen.tsx`). Add new screen names to `LOCKED_SCREENS`.
 - `screens/AdminAreaScreen.tsx` — admin area (App screen 'admin', Figma 3:30): 'Manage restaurant' nav (240 px side
-  column ≥1024, scrolling tab row below) + one section. Sections are `ADMIN_SECTIONS` ('menu', 'prices', 'device');
-  later admin work adds its own (tables, staff, settings, reports, history, backup) to that list and to
+  column ≥1024, scrolling tab row below) + one section. Sections are `ADMIN_SECTIONS` ('menu', 'prices', 'tables',
+  'staff', 'settings', 'device'); later admin work adds its own (reports, history, backup) to that list and to
   `renderSection`, and widens the `api` prop. One `ResultBar` for all sections (`onResult`).
 - `screens/AdminMenuScreen.tsx` + `admin/menuAdminModel.ts` — `AdminMenuSection` (categories → items of the selected
   category → sizes of the selected item), `AdminPricesSection` and `PriceEditor` (Old ₹ / New ₹ side by side,
@@ -67,6 +67,19 @@
   never sends `price`; the availability switch calls only setItemAvailability. Admin lists use `.admin-table`
   (styles/admin.css): a table on desktop, one card per row < 768 px via `td[data-label]`. `#/design/admin-menu`
   previews it.
+- `screens/AdminSetupScreen.tsx` + `admin/setupAdminModel.ts` — admin sections 'tables', 'staff', 'settings'
+  (`ADMIN_SECTIONS` is now menu, prices, tables, staff, settings, device; WI-030 adds reports/history/backup).
+  `AdminSetupApi` (listTables, create/updateTable, listLoginStaff, createUser, updateUser, resetUserPin,
+  getSettings, updateSettings); `AdminAreaScreen`'s `api` is `AdminMenuApi & AdminSetupApi` (+ optional
+  `initialSection`). Lists come from GET /tables and GET /auth/staff (active only) merged with rows changed on this
+  device (`mergeRows`) so turned-off rows can be turned back on. Client checks mirror the server: duplicate table
+  number, display name unique among ACTIVE users, PIN ≥ 4 digits, `tableHasOpenOrder` disables Turn off,
+  `isLastActiveAdmin` protects the only Admin. Admin-PIN clash is server-only (409 shown in the sheet). Unlock =
+  PATCH `{locked_until: null}` (`UNLOCK_BODY`); `isLocked`/`lockMinutesLeft` read `locked_until`. Settings:
+  `settingsErrors` (HH:mm, minutes 1–999, GST rate 0–28), `settingsBody` sends empty GST number/rate as null and
+  keeps discount_limit/kitchen_print/shift_end from the current row; 409 reloads `current`. Reuses `EditSheet`,
+  `TextField`, `useFailText` exported from AdminMenuScreen. Login shows `login.locked` on 423.
+  Previews: `#/design/admin-tables`, `#/design/admin-staff`, `#/design/admin-settings`.
 - `session/approval.ts` — `createApprovalHolder`: single-use Admin approval token, dropped after 2 min.
 - `components/PinPad.tsx` (4-digit large keypad, `shakeKey` shakes once), `components/AdminPinSheet.tsx`
   (Admin PIN override → `createApproval`; use it for every Admin-only action on a cashier phone and pass the token

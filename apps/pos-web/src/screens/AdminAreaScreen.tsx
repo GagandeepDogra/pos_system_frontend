@@ -5,15 +5,18 @@ import { ScreenFrame } from '../components/ScreenFrame';
 import { TopBar } from '../components/TopBar';
 import { ResultBar, type ResultMessage } from '../components/ResultBar';
 import { AdminMenuSection, AdminPricesSection, type AdminMenuApi } from './AdminMenuScreen';
+import { AdminSettingsSection, AdminStaffSection, AdminTablesSection, type AdminSetupApi } from './AdminSetupScreen';
 import '../styles/admin.css';
 
 interface Props {
-  api: AdminMenuApi;
+  api: AdminMenuApi & AdminSetupApi;
   userName: string;
   deviceLock: Role | null;
   onDeviceLock: (role: Role | null) => void;
   onHome: () => void;
   onSwitchUser: () => void;
+  /** Section shown first (default 'menu'). */
+  initialSection?: AdminSection;
 }
 
 const LOCK_CHOICES: (Role | null)[] = [null, ...ROLES.filter((r) => r !== 'ADMIN')];
@@ -22,22 +25,25 @@ const LOCK_CHOICES: (Role | null)[] = [null, ...ROLES.filter((r) => r !== 'ADMIN
  * Sections of the admin area, in the order of the 'Manage restaurant' navigation (Figma 3:30).
  * Later admin work adds its sections (tables, staff, reports, ...) to this list and to `renderSection`.
  */
-export const ADMIN_SECTIONS = ['menu', 'prices', 'device'] as const;
+export const ADMIN_SECTIONS = ['menu', 'prices', 'tables', 'staff', 'settings', 'device'] as const;
 export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 
 /**
  * The separate admin area, opened only after the Admin PIN (REQ-031): the 'Manage restaurant'
  * navigation (a side column on desktop, a row of tabs on a phone) and the chosen section.
  */
-export function AdminAreaScreen({ api, userName, deviceLock, onDeviceLock, onHome, onSwitchUser }: Props) {
+export function AdminAreaScreen({ api, userName, deviceLock, onDeviceLock, onHome, onSwitchUser, initialSection = 'menu' }: Props) {
   const { t } = useI18n();
-  const [section, setSection] = useState<AdminSection>('menu');
+  const [section, setSection] = useState<AdminSection>(initialSection);
   const [result, setResult] = useState<ResultMessage | null>(null);
   const dismiss = useCallback(() => setResult(null), []);
 
   function renderSection() {
     if (section === 'menu') return <AdminMenuSection api={api} onResult={setResult} />;
     if (section === 'prices') return <AdminPricesSection api={api} onResult={setResult} />;
+    if (section === 'tables') return <AdminTablesSection api={api} onResult={setResult} />;
+    if (section === 'staff') return <AdminStaffSection api={api} onResult={setResult} />;
+    if (section === 'settings') return <AdminSettingsSection api={api} onResult={setResult} />;
     return (
       <section className="admin-lock admin-card" aria-labelledby="device-lock-title">
         <h2 id="device-lock-title" className="section-title">{t('deviceLock.title')}</h2>

@@ -64,6 +64,13 @@ What is in place today:
 - in the admin area, menu management: add, rename, reorder and take categories, items and sizes off the menu
   (nothing is ever deleted, and anything taken off can be put back), set veg/non-veg, photo link, Hindi name,
   short code and kitchen station, and mark an item available or not available for today;
+- in the admin area, tables: add a table, rename it, set its area and seats, turn it off (not while it has an
+  open order) and back on; old bills keep the table name they were opened with;
+- in the admin area, staff: add a person with a role and a PIN of 4 or more digits, change the role, reset the
+  PIN, turn the person off (they are logged out everywhere) and back on, and unlock someone locked for 5 minutes
+  after 5 wrong PINs; the login screen says when a person is locked;
+- in the admin area, settings: dhaba name, address, phone, GST number and rate (both optional), receipt footer
+  (printed on the next receipt), token reset time and late-order minutes for the kitchen;
 - price changes with the old and new price side by side and a required reason (market rate, new season,
   correction, other); the new price applies only to new orders;
 - the owner PIN pad for owner-only actions on a cashier's phone;

@@ -50,7 +50,7 @@ function renderAdmin(api: AdminMenuApi) {
   return render(
     <I18nProvider lang="en">
       <ConnectionProvider check={async () => true}>
-        <AdminAreaScreen api={api} userName="Gagan" deviceLock={null} onDeviceLock={() => {}} onHome={() => {}} onSwitchUser={() => {}} />
+        <AdminAreaScreen api={api as Parameters<typeof AdminAreaScreen>[0]['api']} userName="Gagan" deviceLock={null} onDeviceLock={() => {}} onHome={() => {}} onSwitchUser={() => {}} />
       </ConnectionProvider>
     </I18nProvider>,
   );
