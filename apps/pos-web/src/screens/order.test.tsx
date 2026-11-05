@@ -262,7 +262,7 @@ describe('order view in the app', () => {
     fireEvent.click(await screen.findByRole('button', { name: /Ramesh/ }));
     enterPin();
     fireEvent.click(await screen.findByRole('button', { name: /Dine-in/ }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Table 8, Ready to close' }));
+    fireEvent.click(await screen.findByRole('button', { name: /^Table 8(?!\w).*Ready to close/ }));
     expect(await screen.findByText('Bill B-20261105-002')).toBeInTheDocument();
     expect(screen.getAllByTestId('order-kot')).toHaveLength(2);
   });

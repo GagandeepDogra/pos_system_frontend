@@ -17,10 +17,15 @@
     "check:i18n": "node tools/check-i18n.mjs",
     "check:banned-words": "node tools/check-banned-words.mjs",
     "check:shared-enums": "node tools/check-shared-enums.mjs",
-    "ci": "npm run lint && npm run check:i18n && npm run check:banned-words && npm run check:shared-enums && npm run typecheck && npm run test:coverage && npm run build"
+    "ci": "npm run lint && npm run check:i18n && npm run check:banned-words && npm run check:shared-enums && npm run typecheck && npm run test:coverage && npm run build && npm run check:bundle",
+    "check:bundle": "node tools/check-bundle-size.mjs",
+    "e2e": "playwright test --project=chromium",
+    "e2e:browserstack": "playwright test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "1.64.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
@@ -28,6 +33,7 @@
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^3.2.4",
+    "axe-core": "4.14.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react": "^7.37.2",
     "jsdom": "^25.0.1",

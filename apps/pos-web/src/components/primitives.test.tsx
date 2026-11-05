@@ -98,7 +98,7 @@ describe('Table grid (REQ-013, REQ-085, REQ-086)', () => {
   it('REQ-084: a tap opens the table', () => {
     const onOpen = vi.fn();
     render(<TableGrid tables={tables} onOpen={onOpen} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Table 02, Occupied' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Table 02 Occupied/ }));
     expect(onOpen).toHaveBeenCalledWith(tables[1]);
   });
 });

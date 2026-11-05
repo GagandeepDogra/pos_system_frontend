@@ -319,7 +319,7 @@
     "ready": "तैयार"
   },
   "table": {
-    "cardLabel": "टेबल {number}, {status}",
+    "cardPrefix": "टेबल",
     "seats": "{count} सीट",
     "tapToStart": "शुरू करने के लिए छुएँ",
     "minutesOpen": "{count} मिनट से खुली"

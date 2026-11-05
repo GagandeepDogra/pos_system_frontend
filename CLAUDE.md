@@ -19,6 +19,15 @@
 - `npm run ci` — lint, i18n key diff, banned words, shared-enum check, typecheck, tests with coverage, storage/billing
   coverage gate (`tools/check-coverage.mjs`, 80% per file under any `storage/` or `billing/` folder), build.
 
+- `npm run e2e` — Playwright browser gate (`playwright.config.ts`, specs in `e2e/`): axe AA + no horizontal scroll at
+  360 px + 200% zoom (viewport/2, DPR 2) for every `#/design/<screen>` preview (add new screens to `STAFF_SCREENS` in
+  `e2e/screens.spec.ts`), grid columns at 767/768/1024, dine-in flow <= 8 taps / < 30 s (`e2e/mockApi.ts` fakes pos-api
+  with `page.route`), PWA/offline/speed on a `vite preview` build in `dist-e2e`. In this sandbox set
+  `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright`. BrowserStack projects appear when `BROWSERSTACK_USERNAME` is set
+  (`npm run e2e:browserstack`). Do NOT use `page.route` when a test needs the service worker (Chromium bypasses it);
+  `setOffline` also blocks SW responses, so the offline test kills a private preview server.
+- `npm run check:bundle` — 150 KB gzip budget per built JS file (part of `ci`; currently ~138 KB, close to the limit).
+
 ## Layout (apps/pos-web/src)
 - `api/client.ts` — `createApiClient` (base `/api/v1`, bearer token, Idempotency-Key, If-Match, X-Approval-Token,
   timeout + retries with the SAME key, phases pending→checking→saved/failed, 409 returns `current` + `onConflict`,
@@ -191,5 +200,11 @@
   are no Node types in the app tsconfig, so do not import `node:fs` in app tests.
 - Only animation allowed: 150 ms press (`--motion-press`) and sheet slide-in (`--motion-sheet`), both off under
   reduced motion.
+- Accessible names must contain the visible text (axe `label-content-name-mismatch`): add context with a
+  `.visually-hidden` span (primitives.css), not an `aria-label` that replaces the text. Table cards read
+  'Table 02 Occupied ...'; tests query them with `/^Table 02(?!\w)/`.
+- `ScreenFrame` measures the pinned action area (ResizeObserver -> `--pinned-height`) and pads the body by it, so a
+  growing bottom bar (cart summary, zoom) never covers the last row.
+- The service worker matches the cache with `ignoreVary` (assets load with `crossorigin`).
 - Test names cite a REQ id (e.g. `REQ-089: ...`).
 - Do not commit `.eos/` (design input, read-only).

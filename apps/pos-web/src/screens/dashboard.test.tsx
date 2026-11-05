@@ -94,7 +94,7 @@ function renderTables(tables: () => TableView[], channel = createMemoryChannel()
   return { channel, listTables };
 }
 
-const cardFor = (n: string) => screen.getByRole('button', { name: new RegExp(`^Table ${n},`) });
+const cardFor = (n: string) => screen.getByRole('button', { name: new RegExp(`^Table ${n}(?!\\w)`) });
 
 describe('Dashboard primary buttons by role (REQ-028)', () => {
   it('REQ-028: a primary button is at least 45% of a 360 px screen', () => {
@@ -146,8 +146,8 @@ describe('Dashboard live tiles (REQ-029, REQ-030)', () => {
     await loginAs('Ramesh');
     fireEvent.click(await screen.findByRole('button', { name: /3\s*Active tables/ }));
     await waitFor(() => expect(within(screen.getByTestId('table-grid')).getAllByRole('button')).toHaveLength(3));
-    const labels = within(screen.getByTestId('table-grid')).getAllByRole('button').map((b) => b.getAttribute('aria-label'));
-    expect(labels).toEqual(['Table 1, Occupied', 'Table 3, Occupied', 'Table 5, Occupied']);
+    const labels = within(screen.getByTestId('table-grid')).getAllByRole('button').map((b) => b.textContent);
+    expect(labels).toEqual([expect.stringMatching(/^Table 1(?!\w).*Occupied/), expect.stringMatching(/^Table 3(?!\w).*Occupied/), expect.stringMatching(/^Table 5(?!\w).*Occupied/)]);
     expect(api.calls).toContain('GET /tables?status=OCCUPIED');
   });
 
@@ -194,7 +194,7 @@ describe('Table grid with live status (REQ-032, REQ-033)', () => {
     await waitFor(() => expect(cardFor('2')).toBeInTheDocument());
     rows = [table('1'), table('2', { is_active: false })];
     act(() => channel.emit('table.status_changed', { table_id: 'din_2' }));
-    await waitFor(() => expect(screen.queryByRole('button', { name: /^Table 2,/ })).toBeNull());
+    await waitFor(() => expect(screen.queryByRole('button', { name: /^Table 2(?!\w)/ })).toBeNull());
     expect(cardFor('1')).toBeInTheDocument();
   });
 
@@ -217,10 +217,10 @@ describe('Table grid with live status (REQ-032, REQ-033)', () => {
   it('REQ-033: settling the only BILLED order turns Ready to Close into Available', async () => {
     let rows = [table('3', { status: undefined, order_status: 'BILLED', running_amount: '620', minutes_open: 32 })];
     const { channel } = renderTables(() => rows);
-    await waitFor(() => expect(cardFor('3')).toHaveAccessibleName('Table 3, Ready to close'));
+    await waitFor(() => expect(cardFor('3')).toHaveAccessibleName(/^Table 3(?!\w).*Ready to close/));
     rows = [table('3', { status: undefined, order_status: null })];
     act(() => channel.emit('table.status_changed', { table_id: 'din_3', status: 'AVAILABLE' }));
-    await waitFor(() => expect(cardFor('3')).toHaveAccessibleName('Table 3, Available'));
+    await waitFor(() => expect(cardFor('3')).toHaveAccessibleName(/^Table 3(?!\w).*Available/));
     expect(cardFor('3')).toHaveClass('table-card--available');
   });
 
@@ -230,10 +230,10 @@ describe('Table grid with live status (REQ-032, REQ-033)', () => {
     const phoneB = createMemoryChannel();
     renderTables(() => rows, phoneA);
     renderTables(() => rows, phoneB);
-    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Table 1, Available' })).toHaveLength(2));
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /^Table 1(?!\w).*Available/ })).toHaveLength(2));
     rows = [occupied('1', { running_amount: '0', minutes_open: 0 })];
     act(() => { phoneA.emit('table.status_changed', { table_id: 'din_1' }); phoneB.emit('table.status_changed', { table_id: 'din_1' }); });
-    await waitFor(() => expect(screen.getAllByRole('button', { name: 'Table 1, Occupied' })).toHaveLength(2));
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /^Table 1(?!\w).*Occupied/ })).toHaveLength(2));
   });
 
   it('REQ-033: sending new items to a billed table turns it from orange back to red within 3 s', async () => {
@@ -250,11 +250,11 @@ describe('Table grid with live status (REQ-032, REQ-033)', () => {
   it('REQ-116: a phone that missed the payment shows the table Available within 3 s of reconnecting', async () => {
     let rows = [occupied('5')];
     const { channel } = renderTables(() => rows);
-    await waitFor(() => expect(cardFor('5')).toHaveAccessibleName('Table 5, Occupied'));
+    await waitFor(() => expect(cardFor('5')).toHaveAccessibleName(/^Table 5(?!\w).*Occupied/));
     rows = [table('5')]; // paid while this phone was offline
     const back = Date.now();
     act(() => channel.reconnect());
-    await waitFor(() => expect(cardFor('5')).toHaveAccessibleName('Table 5, Available'), { timeout: 3000 });
+    await waitFor(() => expect(cardFor('5')).toHaveAccessibleName(/^Table 5(?!\w).*Available/), { timeout: 3000 });
     expect(Date.now() - back).toBeLessThan(3000);
   });
 
@@ -285,7 +285,7 @@ describe('Table area tabs (REQ-036)', () => {
     fireEvent.click(within(tabs).getByRole('button', { name: 'Family' }));
     expect(within(tabs).getByRole('button', { name: 'Family' })).toHaveAttribute('aria-pressed', 'true');
     const cards = within(screen.getByTestId('table-grid')).getAllByRole('button');
-    expect(cards.map((c) => c.getAttribute('aria-label'))).toEqual(['Table 2, Available']);
+    expect(cards.map((c) => c.textContent)).toEqual([expect.stringMatching(/^Table 2(?!\w).*Available/)]);
   });
 
   it('REQ-036: a table with no area is listed under All only', async () => {
@@ -295,7 +295,7 @@ describe('Table area tabs (REQ-036)', () => {
     expect(cardFor('4')).toBeInTheDocument();
     for (const a of ['Hall', 'Family', 'Outside']) {
       fireEvent.click(within(tabs).getByRole('button', { name: a }));
-      expect(screen.queryByRole('button', { name: /^Table 4,/ })).toBeNull();
+      expect(screen.queryByRole('button', { name: /^Table 4(?!\w)/ })).toBeNull();
     }
     fireEvent.click(within(tabs).getByRole('button', { name: 'All' }));
     expect(cardFor('4')).toBeInTheDocument();

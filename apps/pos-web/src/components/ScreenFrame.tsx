@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
 
 interface NavBarProps {
@@ -48,8 +48,23 @@ interface ScreenFrameProps extends NavBarProps {
 export function ScreenFrame({
   title, intro, status, context, primaryAction, actionSummary, onBack, onHome, className, children,
 }: ScreenFrameProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const actionRef = useRef<HTMLDivElement>(null);
+  const hasAction = Boolean(primaryAction);
+  // The pinned area grows (cart summary, zoom, long translations): reserve its real height under the
+  // body so it never covers the last row of content (REQ-134).
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const action = actionRef.current;
+    if (!root || !action || typeof ResizeObserver === 'undefined') return;
+    const sync = () => root.style.setProperty('--pinned-height', `${action.offsetHeight}px`);
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(action);
+    return () => observer.disconnect();
+  }, [hasAction]);
   return (
-    <div className={`screen${primaryAction ? ' screen--has-action' : ''}${className ? ` ${className}` : ''}`}>
+    <div ref={rootRef} className={`screen${primaryAction ? ' screen--has-action' : ''}${className ? ` ${className}` : ''}`}>
       <header className="screen__header">
         {status ? <div className="screen__status">{status}</div> : null}
         <NavBar onBack={onBack} onHome={onHome} />
@@ -61,7 +76,7 @@ export function ScreenFrame({
         {children}
       </main>
       {primaryAction ? (
-        <div className="pinned-action" data-testid="pinned-action">
+        <div ref={actionRef} className="pinned-action" data-testid="pinned-action">
           {actionSummary}
           {primaryAction}
         </div>

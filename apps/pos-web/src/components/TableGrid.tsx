@@ -23,10 +23,9 @@ export function TableCard({ table, onOpen }: { table: TableCardData; onOpen: (t:
     <button
       type="button"
       className={`table-card table-card--${tableStatusClass(table.status)}`}
-      aria-label={t('table.cardLabel', { number: table.number, status: t(`tableStatus.${statusKey(table.status)}`) })}
       onClick={() => onOpen(table)}
     >
-      <span className="text-table-number">{table.number}</span>
+      <span className="text-table-number"><span className="visually-hidden">{t('table.cardPrefix')} </span>{table.number}</span>
       <TableStatusLabel status={table.status} />
       {free ? (
         table.seats != null ? <span className="text-price">{t('table.seats', { count: table.seats })}</span> : null
@@ -38,10 +37,6 @@ export function TableCard({ table, onOpen }: { table: TableCardData; onOpen: (t:
       </span>
     </button>
   );
-}
-
-function statusKey(s: TableStatus): string {
-  return s === 'AVAILABLE' ? 'available' : s === 'OCCUPIED' ? 'occupied' : 'readyToClose';
 }
 
 /** 2 columns at 360 px, 4 from 768 px, 6 from 1024 px (REQ-013). */

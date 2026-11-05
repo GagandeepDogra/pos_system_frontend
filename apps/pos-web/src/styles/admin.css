@@ -1,5 +1,4 @@
 /* Admin area (Figma 3:30 'Owner overview'): Manage restaurant navigation + section, menu and price screens. */
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .admin-layout { display: flex; flex-direction: column; gap: var(--space-5); }
 .admin-nav {
@@ -31,7 +30,7 @@
 .admin-table { width: 100%; border-collapse: collapse; font-size: var(--text-body); }
 .admin-table th { text-align: left; font-weight: 600; color: var(--color-text-muted); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); }
 .admin-table td { padding: var(--space-3); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
-.admin-row--selected { background: var(--color-surface-muted); }
+.admin-row--selected { background: var(--color-info-bg); box-shadow: inset 4px 0 0 var(--color-info); }
 .admin-actions { text-align: right; }
 .admin-actions .btn { margin: var(--space-1) 0 var(--space-1) var(--gap-tap); }
 .admin-link { background: none; border: 0; padding: 0; min-height: var(--target-min); text-align: left; cursor: pointer; color: var(--color-text); font: inherit; }

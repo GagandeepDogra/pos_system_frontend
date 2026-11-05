@@ -142,11 +142,35 @@ Open http://localhost:4173.
 npm test
 ```
 
-All checks that CI should run (lint, translation key match, banned words, shared types, tests with coverage, build):
+All checks that CI should run (lint, translation key match, banned words, shared types, tests with coverage, build,
+150 KB gzip budget per JavaScript bundle):
 
 ```bash
 npm run ci
 ```
+
+### Browser checks (accessibility, layout, speed, offline launch)
+
+The browser tests in `e2e/` open every staff screen in Chromium and check: no WCAG 2.1 AA problems (axe-core), no
+sideways scrolling at 360 px or at 200% zoom, the table grid going from 2 to 4 columns at 768 px, a 3-item dine-in
+order reaching the kitchen in at most 8 taps and under 30 seconds, the table grid opening in under 1 second on a
+slowed-down phone profile and with 10 devices at once, the app opening in a normal browser tab, the install manifest,
+and the app opening from the cache with the server switched off. They start their own servers (ports 5199 and 4199;
+change with `E2E_DEV_PORT` / `E2E_PROD_PORT`) and need no backend.
+
+```bash
+npx playwright install chromium   # once
+npm run e2e
+```
+
+To run the same tests on real browsers (Chrome/Edge on Windows, Chrome on Android 10, Safari 15) on BrowserStack, set
+`BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY`, start BrowserStack Local, then:
+
+```bash
+npm run e2e:browserstack
+```
+
+The usability check with new staff is done by hand: see `docs/usability-test.md`.
 
 ## Build
 

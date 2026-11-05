@@ -319,7 +319,7 @@
     "ready": "Ready"
   },
   "table": {
-    "cardLabel": "Table {number}, {status}",
+    "cardPrefix": "Table",
     "seats": "{count} seats",
     "tapToStart": "Tap to start",
     "minutesOpen": "{count} min open"
