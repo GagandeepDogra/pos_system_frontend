@@ -5,13 +5,51 @@
   },
   "login": {
     "title": "Who is working?",
-    "subtitle": "Tap your name, then enter your PIN"
+    "subtitle": "Tap your name, then enter your PIN",
+    "staffList": "Staff",
+    "enterPin": "Enter your 4-digit PIN",
+    "pinFor": "PIN for {name}",
+    "wrongPin": "Wrong PIN. Try again.",
+    "wrongPinTries": "Wrong PIN. {count} tries left."
+  },
+  "pin": {
+    "entered": "{count} digits entered",
+    "adminTitle": "Owner PIN",
+    "adminHelp": "Owner, enter your PIN on this phone",
+    "adminLabel": "Owner PIN",
+    "notAdmin": "This is not the owner's PIN.",
+    "cancel": "Cancel"
+  },
+  "session": {
+    "switchUserNamed": "{name} · Switch user",
+    "switchUserBar": "{name} · Switch user"
+  },
+  "roles": {
+    "ADMIN": "Owner",
+    "CASHIER": "Cashier",
+    "KITCHEN": "Kitchen"
+  },
+  "connection": {
+    "online": "✓ Connected to restaurant Wi-Fi",
+    "offline": "✕ No connection",
+    "offlineHelp": "Orders and payments cannot be sent now. The cart is kept on this phone."
+  },
+  "admin": {
+    "title": "Admin"
+  },
+  "deviceLock": {
+    "title": "This device is for",
+    "help": "Choose Kitchen and this tablet opens straight to the Kitchen screen.",
+    "none": "Everyone"
   },
   "dashboard": {
+    "hello": "Hello, {name}",
+    "roleDate": "{role} · {date}",
     "dineIn": "Dine-in",
     "takeaway": "Takeaway",
     "kitchen": "Kitchen",
-    "payment": "Payment"
+    "payment": "Payment",
+    "admin": "ADMIN"
   },
   "actions": {
     "sendToKitchen": "Send to Kitchen",

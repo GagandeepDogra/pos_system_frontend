@@ -5,13 +5,51 @@
   },
   "login": {
     "title": "कौन काम कर रहा है?",
-    "subtitle": "अपना नाम दबाएँ, फिर PIN डालें"
+    "subtitle": "अपना नाम दबाएँ, फिर PIN डालें",
+    "staffList": "स्टाफ़",
+    "enterPin": "अपना 4 अंकों का PIN डालें",
+    "pinFor": "{name} का PIN",
+    "wrongPin": "PIN गलत है। फिर से डालें।",
+    "wrongPinTries": "PIN गलत है। {count} बार और कोशिश कर सकते हैं।"
+  },
+  "pin": {
+    "entered": "{count} अंक डाले",
+    "adminTitle": "मालिक का PIN",
+    "adminHelp": "मालिक इसी फ़ोन पर अपना PIN डालें",
+    "adminLabel": "मालिक का PIN",
+    "notAdmin": "यह मालिक का PIN नहीं है।",
+    "cancel": "रद्द करें"
+  },
+  "session": {
+    "switchUserNamed": "{name} · यूज़र बदलें",
+    "switchUserBar": "{name} · यूज़र बदलें"
+  },
+  "roles": {
+    "ADMIN": "मालिक",
+    "CASHIER": "कैशियर",
+    "KITCHEN": "रसोई"
+  },
+  "connection": {
+    "online": "✓ रेस्टोरेंट Wi-Fi से जुड़ा है",
+    "offline": "✕ कनेक्शन नहीं है",
+    "offlineHelp": "ऑर्डर और पैसे अभी नहीं भेज सकते। कार्ट इसी फ़ोन पर सुरक्षित है।"
+  },
+  "admin": {
+    "title": "एडमिन"
+  },
+  "deviceLock": {
+    "title": "यह डिवाइस किसके लिए है",
+    "help": "रसोई चुनने पर यह टैबलेट सीधे रसोई स्क्रीन खोलेगा।",
+    "none": "सबके लिए"
   },
   "dashboard": {
+    "hello": "नमस्ते, {name}",
+    "roleDate": "{role} · {date}",
     "dineIn": "टेबल",
     "takeaway": "पार्सल",
     "kitchen": "रसोई",
-    "payment": "भुगतान"
+    "payment": "भुगतान",
+    "admin": "एडमिन"
   },
   "actions": {
     "sendToKitchen": "रसोई में भेजें",

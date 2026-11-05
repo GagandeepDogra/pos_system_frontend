@@ -45,12 +45,34 @@
 - `styles/primitives.css` — classes for the primitives; type scale classes `.text-item`, `.text-price`,
   `.text-table-number`; `.choice-row` for segmented tabs. `.theme-kitchen-dark` (tokens.css) overrides the colours.
 - `screens/DesignPreview.tsx` — dev-only gallery at `#/design` (used for screenshots).
-- `screens/LoginScreen.tsx` — shell start screen (title + language choice); login tiles/PIN come later.
+- `App.tsx` — the app router (state, no URL routes): session → LoginScreen; screens 'dashboard' | 'admin' |
+  'tables' | 'takeaway' | 'kitchen' | 'bills' (others render `PlaceholderScreen` until their tickets replace it —
+  swap the branch in App for the real screen). `open(screen)` checks `canOpen(deviceLock, screen)`. Every API
+  401 logs the device out. `App` takes an optional `fetchImpl` prop (tests use a fake server).
+- `session/session.ts` — the ONE stored session `{token,user,loginAt,kitchenDevice,shiftEnd}` (localStorage
+  `dhaba.session`); `sessionDeadline` = min(12 h, next shift end, JWT exp), null on a kitchen device.
+- `session/deviceLock.ts` — device role lock (`dhaba.deviceRole`), `canOpen`, `homeScreen` (KITCHEN → 'kitchen').
+  Set from the admin area (`screens/AdminAreaScreen.tsx`). Add new screen names to `LOCKED_SCREENS`.
+- `session/approval.ts` — `createApprovalHolder`: single-use Admin approval token, dropped after 2 min.
+- `components/PinPad.tsx` (4-digit large keypad, `shakeKey` shakes once), `components/AdminPinSheet.tsx`
+  (Admin PIN override → `createApproval`; use it for every Admin-only action on a cashier phone and pass the token
+  as `approvalToken`), `components/TopBar.tsx` (name, user button = switch user, clock, connection line). Put
+  `<TopBar userName onSwitchUser/>` in `ScreenFrame`'s `status` slot on every staff screen.
+- `offline/connection.tsx` — `ConnectionProvider` polls /health every 3 s; `useOnline()`; `ConnectionLine`
+  (green line / red banner). `PendingButton` is disabled while offline (`needsConnection={false}` to opt out):
+  use it for Send/Pay. Never auto-submit on reconnect.
+- `screens/LoginScreen.tsx` — staff tiles (active only) + PIN pad, language choice; also the user-switch screen.
+- `screens/DashboardScreen.tsx` — Home shell: greeting, 4 `pair()` buttons, ADMIN (Admins, needs PIN), language,
+  switch-user bar. The "Right now" live counts are added by the dashboard ticket.
+- `styles/session.css` — classes for the above. Icons in `public/icons/` (from the design assets).
 - `pwa/` — `sw-template.js` (precache shell, network-first navigation with cached index.html fallback, never
   caches `/api/`), `register.ts` (prod only). Manifest/icon in `public/`.
 - `styles/tokens.css` — design tokens (CSS variables from the Figma design); `styles/shell.css` — shared classes.
 
 ## Conventions
+- Exception to the animation rule: the PIN pad shakes once (400 ms) on a wrong PIN (ticket requirement); it is off
+  under reduced motion like everything else.
+- Login response assumed `{token, user}`; 401 body `details.remaining_tries` gives the tries left.
 - No literal text in JSX: every staff-facing string is a key in BOTH en.json and hi.json (lint + key diff fail CI).
   Symbols allowed: ✓ ✕ ⌫ · /.
 - Plain words only: never 'Invoice', 'Submit KOT', 'Void line' in locale files (banned-word scan).

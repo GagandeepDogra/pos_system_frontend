@@ -6,8 +6,17 @@ browser, or install it to the home screen, where it opens full-screen and starts
 (it then waits for the counter computer). All labels are in English and Hindi, chosen per staff member.
 
 What is in place today:
-- the installable app shell (web manifest, service worker that caches the app for offline launch) and the
-  start screen with the English / Hindi switch;
+- the installable app shell (web manifest, service worker that caches the app for offline launch);
+- login: active staff appear as large name tiles; tap your name and type your 4-digit PIN (a wrong PIN shakes
+  the pad and shows the tries left). Tap your name in the top bar on any screen to switch user;
+- sessions end after 12 hours or at the shift end set in settings; a kitchen tablet stays logged in;
+- the home screen with Dine-in, Takeaway, Kitchen and Payment buttons, and for the owner an ADMIN button that
+  asks for the owner's PIN first. In the admin area a device can be locked to a role, e.g. the kitchen tablet
+  then always opens straight to the Kitchen screen;
+- the owner PIN pad for owner-only actions on a cashier's phone;
+- a red "No connection" banner when the counter computer cannot be reached (checked every 3 seconds); sending
+  orders and payments is blocked until it is back, and nothing is sent automatically;
+- English / Hindi switch, saved per staff member;
 - the typed client for the dhaba's backend API (`/api/v1`), with safe retries for orders and payments;
 - shared building blocks: result bars, busy buttons and the on-screen number keypad;
 - checks that keep all text in the translation files and in plain words.
