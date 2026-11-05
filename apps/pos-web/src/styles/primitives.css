@@ -1,0 +1,128 @@
+/*
+ * Design-system primitives shared by every staff screen (mobile first: 360 px base,
+ * enhanced at 768 px tablet and 1024 px desktop).
+ */
+
+/* Screen frame: header (nav + context pill) stays visible, content scrolls, one pinned action. */
+.screen { min-height: 100vh; display: flex; flex-direction: column; background: var(--color-bg); overflow-x: hidden; }
+.screen__header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4); background: var(--color-surface);
+}
+.screen__status { display: flex; justify-content: space-between; gap: var(--space-3); min-width: 0; }
+.screen__body {
+  flex: 1; display: flex; flex-direction: column; gap: var(--space-4);
+  padding: var(--space-6) var(--space-4); width: 100%; max-width: 1280px; margin: 0 auto; min-width: 0;
+}
+.screen__intro { margin: 0; color: var(--color-text-muted); }
+.screen--has-action .screen__body {
+  padding-bottom: calc(var(--pinned-height, calc(var(--bottom-action) + var(--space-8))) + var(--space-4));
+}
+
+/* HOME / BACK always in the same place (REQ-088). */
+.nav-bar { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-tap); }
+.nav-bar__placeholder { visibility: hidden; }
+@media (min-width: 768px) {
+  .nav-bar { grid-template-columns: 160px 160px; }
+}
+
+/* The single primary action, pinned at the bottom, 64 px, full width on phone (REQ-084). */
+.pinned-action {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-4); background: var(--color-surface); border-top: 1px solid var(--color-border);
+}
+.pinned-action .btn { width: 100%; min-height: var(--bottom-action); }
+@media (min-width: 1024px) {
+  .pinned-action { align-items: flex-end; }
+  .pinned-action .btn { width: auto; min-width: 320px; }
+}
+.btn { transition: transform var(--motion-press) ease-out; }
+.btn--block { width: 100%; }
+.btn--primary { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+
+/* Segmented choice row (areas, categories): 56 px targets, 12 px gaps. */
+.choice-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--gap-tap); }
+.choice-row .btn[aria-pressed='true'] { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+
+/* Order context pill (REQ-093). */
+.context-pill {
+  display: flex; align-items: center; padding: var(--space-2); border-radius: var(--radius-sm);
+  font-weight: 500; min-width: 0; overflow-wrap: anywhere;
+}
+.context-pill--table { background: var(--color-danger-bg); color: var(--color-danger); }
+.context-pill--token { background: var(--color-info-bg); color: var(--color-info); }
+.context-pill--ready-to-close { background: var(--color-warning-bg); color: var(--color-warning); }
+
+/* Status: always icon + word, never colour alone (REQ-086). */
+.status-label { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 600; }
+.status-label__icon { font-weight: 700; }
+.status--available { color: var(--color-success); }
+.status--occupied { color: var(--color-danger); }
+.status--ready-to-close { color: var(--color-warning); }
+.status--new { color: var(--color-info); }
+.status--preparing { color: var(--color-amber); }
+.status--ready { color: var(--color-success); }
+.status-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.status-legend .status-label { font-weight: 500; }
+
+/* Type scale (REQ-085). */
+.text-item { font-size: var(--text-item); line-height: var(--text-item-lh); font-weight: 500; }
+.text-price { font-size: var(--text-price); line-height: var(--text-price-lh); font-weight: 700; color: var(--color-text); }
+.text-table-number { font-size: var(--text-table-number); line-height: var(--text-table-number-lh); font-weight: 700; color: var(--color-text); }
+
+/* Table grid: 2 columns on phone, 4 from 768 px (REQ-013). */
+.table-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); align-items: start; }
+@media (min-width: 768px) {
+  .table-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .table-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+.table-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  min-height: var(--target-min); min-width: var(--target-min); padding: var(--space-4);
+  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font: inherit; text-align: left; color: var(--color-text); cursor: pointer;
+  transition: transform var(--motion-press) ease-out;
+}
+.table-card:active { transform: scale(0.97); }
+.table-card--available { background: var(--color-success-bg); }
+.table-card--occupied { background: var(--color-danger-bg); }
+.table-card--ready-to-close { background: var(--color-warning-bg); }
+.table-card__note { color: var(--color-text-muted); }
+
+/* Confirm sheet (REQ-090): one large sheet, NO left, YES right. */
+.sheet-scrim { position: fixed; inset: 0; z-index: 60; background: var(--color-scrim); display: flex; align-items: flex-end; }
+.sheet {
+  width: 100%; max-width: 640px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: var(--space-4);
+  padding: var(--space-6) var(--space-4); background: var(--color-surface); color: var(--color-text);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  animation: sheet-in var(--motion-sheet) ease-out;
+}
+.sheet__title { margin: 0; font-size: var(--text-heading); line-height: var(--text-heading-lh); font-weight: 700; }
+.sheet__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-tap); }
+.sheet__actions .btn { min-height: var(--bottom-action); }
+@keyframes sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .sheet { animation: none; }
+  .btn, .table-card { transition: none; }
+}
+
+/* Kitchen status columns: stacked on phone, three side by side on a landscape tablet (REQ-091). */
+.status-columns { display: grid; grid-template-columns: 1fr; gap: var(--space-5); }
+@media (min-width: 768px) and (orientation: landscape), (min-width: 1024px) {
+  .status-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.status-column { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.status-column__heading { display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-4); border-radius: var(--radius-md); }
+.status-column__title { font-size: var(--text-price); line-height: var(--text-price-lh); font-weight: 600; margin: 0; }
+.status-column--new .status-column__heading { background: var(--color-info-bg); color: var(--color-info); }
+.status-column--preparing .status-column__heading { background: var(--color-amber-bg); color: var(--color-amber); }
+.status-column--ready .status-column__heading { background: var(--color-success-bg); color: var(--color-success); }
+
+.theme-choice { display: flex; flex-direction: column; gap: var(--space-2); }
+/* Text for screen readers only (accessible names that add context to visible text). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

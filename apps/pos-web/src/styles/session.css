@@ -1,0 +1,89 @@
+/* Login, PIN pad, top bar, offline banner and dashboard shell (Home · Phone frame). */
+
+.top-bar__name { flex: 1; min-width: 0; }
+.top-bar__user { min-height: var(--target-min); padding: var(--space-2) var(--space-3); max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+.screen__status .top-bar { padding: 0; flex: 1; min-width: 0; }
+
+.connection { margin: 0; font-weight: 500; }
+.connection--ok { color: var(--color-success); }
+.offline-banner {
+  display: flex; flex-direction: column; gap: var(--space-1);
+  padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
+  background: var(--color-danger); color: var(--color-on-primary);
+}
+
+/* Staff tiles: large name buttons, 2 per row on phones. */
+.staff-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); }
+@media (min-width: 768px) { .staff-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.staff-tile {
+  width: 100%; min-height: 112px; padding: var(--space-4);
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: var(--space-3);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font: inherit; color: var(--color-text); text-align: left; cursor: pointer;
+  transition: transform var(--motion-press) ease-out;
+}
+.staff-tile:active { transform: scale(0.97); }
+.staff-tile__name { font-size: var(--text-title); line-height: var(--text-title-lh); font-weight: 600; overflow-wrap: anywhere; }
+.staff-tile__role { color: var(--color-text-muted); }
+.login__back { align-self: flex-start; }
+.login__error { display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-danger); }
+.login__error p { margin: 0; }
+
+/* PIN pad: 4 dots and a 3×4 keypad of large keys. */
+.pin-pad { display: flex; flex-direction: column; gap: var(--space-4); width: 100%; max-width: 420px; }
+.pin-pad__label { margin: 0; font-weight: 600; }
+.pin-pad__dots { display: flex; gap: var(--space-4); justify-content: center; padding: var(--space-2) 0; }
+.pin-pad__dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--color-text); }
+.pin-pad__dot--on { background: var(--color-text); }
+.pin-pad__message { margin: 0; color: var(--color-danger); font-weight: 600; text-align: center; }
+.pin-pad__keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap-tap); }
+.pin-pad__key { min-height: var(--bottom-action); font-size: var(--text-price); }
+/* One shake on a wrong PIN (part of the press feedback; off under reduced motion). */
+.pin-pad--shake { animation: pin-shake 400ms ease-in-out 1; }
+@keyframes pin-shake {
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* Dashboard shell. */
+.quick-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); width: 100%; }
+@media (min-width: 768px) { .quick-actions { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.quick-action {
+  min-height: 180px; padding: var(--space-4);
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: var(--space-3);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font: inherit; color: var(--color-text); text-align: left; cursor: pointer;
+  transition: transform var(--motion-press) ease-out;
+}
+.quick-action:active { transform: scale(0.97); }
+.quick-action__label { font-size: var(--text-title); line-height: var(--text-title-lh); font-weight: 600; overflow-wrap: anywhere; }
+/*
+ * A primary button must be at least 45% of a 360 px screen (162 px): with 12 px side
+ * padding and the 12 px gap each of the two columns is (360 - 24 - 12) / 2 = 162 px.
+ */
+.dashboard .workspace { padding-left: var(--space-3); padding-right: var(--space-3); }
+
+/* "Right now" live tiles (REQ-029). */
+.live-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-tap); width: 100%; align-items: start; }
+@media (min-width: 768px) { .live-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.live-tile {
+  min-height: 113px; padding: var(--space-4);
+  display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3);
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  font: inherit; color: var(--color-text); text-align: left; cursor: pointer;
+  transition: transform var(--motion-press) ease-out;
+}
+.live-tile:active { transform: scale(0.97); }
+.live-tile__value { font-size: var(--text-figure); line-height: 43px; font-weight: 700; overflow-wrap: anywhere; }
+.live-tile__label { color: var(--color-text-muted); overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .live-tile { transition: none; } }
+
+/* Tables screen (Tables · Phone). */
+.area-tabs { width: 100%; }
+.area-tabs .btn { min-width: 0; padding-left: var(--space-1); padding-right: var(--space-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tables__message { margin: 0; color: var(--color-text-muted); }
+.tables__takeaway { min-height: var(--bottom-action); }
+.admin-entry { min-height: var(--target-min); }
+.bottom-actions { padding: var(--space-4); background: var(--color-surface); display: flex; flex-direction: column; gap: var(--space-3); }
+.section-title { margin: 0; font-size: var(--text-title); line-height: var(--text-title-lh); font-weight: 600; }
+.admin-lock { display: flex; flex-direction: column; gap: var(--space-3); }

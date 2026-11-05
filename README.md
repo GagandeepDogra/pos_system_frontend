@@ -1,0 +1,181 @@
+# Dhaba POS — web app
+
+The point-of-sale app for a dhaba: staff use it on phones, tablets and the counter PC to take dine-in and
+takeaway orders, run the kitchen board and take payments. It is a Progressive Web App: open its URL in a
+browser, or install it to the home screen, where it opens full-screen and starts even when the network is off
+(it then waits for the counter computer). All labels are in English and Hindi, chosen per staff member.
+
+What is in place today:
+- the installable app shell (web manifest, service worker that caches the app for offline launch);
+- login: active staff appear as large name tiles; tap your name and type your 4-digit PIN (a wrong PIN shakes
+  the pad and shows the tries left). Tap your name in the top bar on any screen to switch user;
+- sessions end after 12 hours or at the shift end set in settings; a kitchen tablet stays logged in;
+- the home screen with the buttons each role may use (Dine-in, Takeaway, Kitchen, Payment; kitchen staff
+  see only Kitchen) and live "Right now" tiles: today's sales (owner only), active tables, kitchen pending,
+  ready to serve and open takeaways. Tiles refresh by themselves within seconds of any change; tapping a tile
+  opens its list (Active tables lists the occupied tables);
+- the Dine-in tables screen: every active table as a card with its number and status (green Available, red
+  Occupied, orange Ready to close); occupied tables show the running bill and minutes open. Large area tabs
+  (All plus each area, e.g. Hall, Family, Outside) filter the grid; tables with no area are listed under All.
+  The grid updates live on every phone, and catches up after a lost connection;
+- food selection (tap an Available table): the table pill stays in the header; category buttons, a
+  All / Veg / Non-veg filter with the green and red dot marks, and search from 2 letters (English, Hindi or
+  short code). Cards show both names, an optional photo and the starting price. One-size items are added in one
+  tap; items with sizes (Half / Full) open a size sheet. Finished items are greyed "Khatam / Not available";
+- the cart bar (item count and total) opens a summary with large − / + buttons and a kitchen note per line
+  (Less spicy, Extra spicy, No onion, Parcel, plus free text, up to 80 letters). The cart is kept on the phone,
+  so it survives a reload or a lost connection. Send to Kitchen makes one kitchen ticket of the new lines only
+  and shows its number in green; sent lines are listed in grey under "Sent to kitchen". A slow or lost answer
+  is retried safely, so a ticket is never made twice; if some food has just finished, only those lines are
+  dropped and the rest stay in the cart;
+- the Order view, opened by tapping an Occupied or Ready to close table: everything sent so far, grouped under
+  each KOT number (sent food in grey, cancelled lines marked), Mark served for ready tickets, and ADD MORE FOOD.
+  A line can be cancelled with a reason; once the kitchen has started it, the owner's PIN is asked for. The bill
+  card shows every line at the price it was ordered at, then subtotal, discount, tax (or "Not configured"),
+  round off and grand total, all as computed by the server. PRINT BILL gives the bill its number and turns the
+  table orange (Ready to close); Discount (₹ or %, with a reason; the owner's PIN above the limit in settings),
+  Move table (free tables only) and Join table (merge another table's order into this bill) sit below it.
+- the Payment screen: every open bill by table or token with the amount due and a Ready to close badge. Tapping
+  one shows the bill, then Cash, UPI and Card. Cash shows cash given and change (quick ₹100/₹200/₹500/₹2000 and
+  Exact); UPI shows the dhaba's QR (replace `apps/pos-web/public/upi-qr.svg` with your own) and a Received
+  button. A bill can be split across methods; at zero balance a green PAID screen offers Print, Share
+  (WhatsApp text) and Done. The owner (or a cashier with the owner's PIN) can void a payment or close a bill
+  with a balance, with a reason. Receipts print through the browser to an 80 mm or 58 mm thermal printer;
+  a printer problem never undoes a payment. Kitchen KOTs are printed only if kitchen printing is switched on.
+- the Takeaway screen: every active takeaway as a card with its token (T-001, T-002 ... from the server, starting
+  again each business day), item count and total, the kitchen status (New, Preparing, Ready) and Paid / Unpaid.
+  "+ New takeaway" asks for an optional customer name and phone (the last 4 digits are enough; both may be left
+  empty), then shows the new token in large figures with Add food. A takeaway can be paid before or after
+  cooking: a Ready but unpaid token stays in the list with "Collect ₹… →"; HANDED OVER on a Ready and Paid token
+  removes it from the list (the server refuses it for an unpaid or not-ready token). View payments opens the
+  bills list;
+- the Kitchen board (built for a tablet in landscape): New, Preparing and Ready columns side by side, oldest
+  ticket first. Each card shows the table or token, KOT number, time sent and minutes waiting, every item with
+  its size and quantity, and kitchen notes in a red box; items cancelled after sending are struck through.
+  One large button moves a ticket a single step (Start preparing, then Mark ready). A new ticket beeps and
+  stays outlined in blue until someone touches it; tickets waiting longer than the late limit in settings
+  (15 minutes by default) show a red "Late" label. Served tickets disappear 10 minutes after serving or
+  payment. No prices are shown in the kitchen. Kitchen staff can mark a food out of stock for today, and the
+  kitchen tablet offers a dark screen. Cashier phones get a "Food ready · Table 5" chip and an out-of-stock
+  alert;
+- for the owner an ADMIN button that
+  asks for the owner's PIN first. In the admin area a device can be locked to a role, e.g. the kitchen tablet
+  then always opens straight to the Kitchen screen;
+- in the admin area, menu management: add, rename, reorder and take categories, items and sizes off the menu
+  (nothing is ever deleted, and anything taken off can be put back), set veg/non-veg, photo link, Hindi name,
+  short code and kitchen station, and mark an item available or not available for today;
+- in the admin area, tables: add a table, rename it, set its area and seats, turn it off (not while it has an
+  open order) and back on; old bills keep the table name they were opened with;
+- in the admin area, staff: add a person with a role and a PIN of 4 or more digits, change the role, reset the
+  PIN, turn the person off (they are logged out everywhere) and back on, and unlock someone locked for 5 minutes
+  after 5 wrong PINs; the login screen says when a person is locked;
+- in the admin area, reports: today, yesterday or a date range (past months included), with total collected,
+  the Cash/UPI/Card split, sales by category, top selling items, cancelled items, and discounts and exceptions;
+  "Download report" saves a CSV;
+- in the admin area, history: find past orders by date, bill number, table or token;
+- in the admin area, day close: the cash total to count in the drawer, every open or printed bill in red (collect
+  it or close it with a reason), then "Close the day", which saves a backup copy;
+- in the admin area, backup: download the current data file or a saved copy, and restore from a backup file:
+  the file is checked first, its date and order/payment counts are shown, the owner PIN is entered twice, and
+  then every device reloads on the restored data;
+- in the admin area, settings: dhaba name, address, phone, GST number and rate (both optional), receipt footer
+  (printed on the next receipt), token reset time and late-order minutes for the kitchen;
+- price changes with the old and new price side by side and a required reason (market rate, new season,
+  correction, other); the new price applies only to new orders;
+- the owner PIN pad for owner-only actions on a cashier's phone;
+- a red "No connection" banner when the counter computer cannot be reached (checked every 3 seconds); sending
+  orders and payments is blocked until it is back, and nothing is sent automatically;
+- English / Hindi switch, saved per staff member;
+- the typed client for the dhaba's backend API (`/api/v1`), with safe retries for orders and payments;
+- shared building blocks: result bars, busy buttons and the on-screen number keypad;
+- checks that keep all text in the translation files and in plain words.
+
+## Stack
+TypeScript, React 19, Vite 6, Vitest, ESLint. npm workspaces: `apps/pos-web` (the app) and `packages/shared`
+(types shared with the backend).
+
+## Requirements
+- Node.js 20 and npm 10.
+- The backend API (served by the counter computer) for live data. During development, the dev server forwards
+  `/api` and the live-update channel (`/socket.io`, Socket.IO) to `POS_API_URL` (default
+  `http://localhost:3000`). The app shell runs without it. Without a backend, sample screens can be viewed in
+  development at `http://localhost:5173/#/design/dashboard`, `http://localhost:5173/#/design/tables` and
+  `http://localhost:5173/#/design/kitchen` (`#/design/kitchen-dark` for the dark kitchen screen),
+  `#/design/bills` and `#/design/payment`.
+
+Configuration (optional, see `.env.example`):
+
+| variable | default | meaning |
+|---|---|---|
+| `POS_API_URL` | `http://localhost:3000` | backend address the dev server forwards `/api` to |
+
+## Install
+
+```bash
+npm install
+```
+
+## Run locally
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173.
+
+While developing, http://localhost:5173/#/design shows the shared screen parts together (table cards,
+status labels, order pill, confirm sheet, kitchen columns, dark kitchen screen). This page is not part of the
+built app.
+
+To try the built app (with the service worker):
+
+```bash
+npm run build
+npm run preview
+```
+
+Open http://localhost:4173.
+
+## Test
+
+```bash
+npm test
+```
+
+All checks that CI should run (lint, translation key match, banned words, shared types, tests with coverage, build,
+150 KB gzip budget per JavaScript bundle):
+
+```bash
+npm run ci
+```
+
+### Browser checks (accessibility, layout, speed, offline launch)
+
+The browser tests in `e2e/` open every staff screen in Chromium and check: no WCAG 2.1 AA problems (axe-core), no
+sideways scrolling at 360 px or at 200% zoom, the table grid going from 2 to 4 columns at 768 px, a 3-item dine-in
+order reaching the kitchen in at most 8 taps and under 30 seconds, the table grid opening in under 1 second on a
+slowed-down phone profile and with 10 devices at once, the app opening in a normal browser tab, the install manifest,
+and the app opening from the cache with the server switched off. They start their own servers (ports 5199 and 4199;
+change with `E2E_DEV_PORT` / `E2E_PROD_PORT`) and need no backend.
+
+```bash
+npx playwright install chromium   # once
+npm run e2e
+```
+
+To run the same tests on real browsers (Chrome/Edge on Windows, Chrome on Android 10, Safari 15) on BrowserStack, set
+`BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY`, start BrowserStack Local, then:
+
+```bash
+npm run e2e:browserstack
+```
+
+The usability check with new staff is done by hand: see `docs/usability-test.md`.
+
+## Build
+
+```bash
+npm run build
+```
+
+The output in `apps/pos-web/dist` is one static bundle for every device; the backend serves it at its root URL.

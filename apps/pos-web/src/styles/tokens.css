@@ -1,0 +1,110 @@
+/* Design tokens from the Figma design (v1). Use these variables, never raw hex. */
+:root {
+  --color-bg: #f7f9fa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #e9edf1;
+  --color-border: #dce1e6;
+  --color-text: #111827;
+  --color-text-muted: #4b5563;
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+  --color-warning: #c2410c;
+  --color-warning-bg: #fff7ed;
+  --color-info: #1d4ed8;
+  --color-info-bg: #eff6ff;
+  --color-focus: #1d4ed8;
+  --color-amber: #a16207;
+  --color-amber-bg: #fefce8;
+  --color-primary: #111827;
+  --color-on-primary: #ffffff;
+  --color-scrim: rgba(17, 24, 39, 0.5);
+
+  /* Type scale (REQ-085): body 18, item 20, price/total 24 bold, table number 40 bold. */
+  --text-item: 20px;
+  --text-item-lh: 27px;
+  --text-price: 24px;
+  --text-price-lh: 32.5px;
+  --text-table-number: 40px;
+  --text-table-number-lh: 54px;
+  --text-token: 64px;
+  --text-token-lh: 77px;
+
+  /* Motion (REQ-091): only press feedback and sheet slide-in, 150 ms. */
+  --motion-press: 150ms;
+  --motion-sheet: 150ms;
+
+  --gap-tap: 12px;
+
+  --font-family: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', 'Noto Sans Devanagari', Roboto, sans-serif;
+  --text-body: 18px;
+  --text-body-lh: 24.5px;
+  --text-title: 22px;
+  --text-title-lh: 29.5px;
+  --text-heading: 28px;
+  --text-heading-lh: 38px;
+  --text-figure: 32px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+
+  --target-min: 56px;
+  --bottom-action: 64px;
+}
+
+/* Kitchen dark theme (REQ-092): only applied on the kitchen screen, to cut glare. */
+.theme-kitchen-dark {
+  --color-bg: #0b1120;
+  --color-surface: #111827;
+  --color-surface-muted: #1f2937;
+  --color-border: #374151;
+  --color-text: #f9fafb;
+  --color-text-muted: #d1d5db;
+  --color-success: #4ade80;
+  --color-success-bg: #052e16;
+  --color-danger: #fca5a5;
+  --color-danger-bg: #450a0a;
+  --color-warning: #fdba74;
+  --color-warning-bg: #431407;
+  --color-info: #93c5fd;
+  --color-info-bg: #172554;
+  --color-amber: #fde047;
+  --color-amber-bg: #422006;
+  --color-primary: #f9fafb;
+  --color-on-primary: #111827;
+  --color-focus: #93c5fd;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root { margin: 0; min-height: 100%; }
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
